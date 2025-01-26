@@ -4,7 +4,12 @@ require "nvchad.mappings"
 
 local map = vim.keymap.set
 
-map("n", ";", ":", { desc = "CMD enter command mode" })
-map("i", "jk", "<ESC>")
+-- escape modus
+map("i", "jk", "<ESC>", { desc = "custom escape" })
+map("v", "jk", "<ESC>", { desc = "custom escape" })
 
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+-- neogit
+map("n", "<leader>gg", "<cmd> Neogit <cr>", { desc = "Open NeoGit" })
+
+-- Disable mappings
+local nomap = vim.keymap.del
