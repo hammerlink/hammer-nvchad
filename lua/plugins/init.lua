@@ -1,6 +1,7 @@
 local neogit_plugin = require('plugins.neogit')
 local telescope_plugin = require('plugins.telescope')
 local avante_plugin = require('plugins.avante')
+local cmp_plugin = require('plugins.cmp')
 
 return {
     {
@@ -35,6 +36,7 @@ return {
             },
         },
     },
+    cmp_plugin,
     neogit_plugin,
     telescope_plugin,
     avante_plugin,
