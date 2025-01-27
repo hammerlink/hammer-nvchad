@@ -33,4 +33,5 @@ return {
     },
     require 'lua.plugins.neogit',
     require 'lua.plugins.telescope',
+    require 'lua.plugins.avante',
 }
