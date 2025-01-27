@@ -28,11 +28,11 @@ map('n', '<leader>lr', '<cmd> LspRestart <cr>', { desc = 'LSP Restart' })
 map('n', '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
 
 -- Tabbufline
-map('n', '<A-h>', function()
+map('n', '<A-l>', function()
     require('nvchad.tabufline').next()
 end, { desc = 'buffer goto next' })
 
-map('n', '<A-l>', function()
+map('n', '<A-h>', function()
     require('nvchad.tabufline').prev()
 end, { desc = 'buffer goto prev' })
 
