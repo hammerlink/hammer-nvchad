@@ -74,6 +74,7 @@ end, { desc = 'terminal toggleable horizontal term' })
 map('n', '<leader>ot', '<cmd> OverseerToggle <CR>', { desc = 'Overseer Toggle' })
 map('n', '<leader>or', '<cmd> OverseerRun <CR>', { desc = 'Overseer Run' })
 map('n', '<leader>oo', '<cmd> OverseerQuickAction <CR>', { desc = 'Overseer quick action' })
+map('n', '<leader>nx', '<cmd> lua require("notify").dismiss() <CR>', { desc = 'Close all notifications' })
 
 -- Disable mappings
 local nomap = vim.keymap.del
