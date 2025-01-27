@@ -27,11 +27,11 @@ local M = {
         mappings = {
             --- @class AvanteConflictMappings
             diff = {
-                ours = 'co',
-                theirs = 'ct',
-                all_theirs = 'ca',
-                both = 'cb',
-                cursor = 'cc',
+                ours = 'do',
+                theirs = 'dt',
+                all_theirs = 'da',
+                both = 'db',
+                cursor = 'dc',
                 next = ']x',
                 prev = '[x',
             },
@@ -56,7 +56,7 @@ local M = {
                 reverse_switch_windows = '<S-Tab>',
             },
         },
-        hints = { enabled = true },
+        hints = { enabled = false },
         windows = {
             ---@type "right" | "left" | "top" | "bottom"
             position = 'right', -- the position of the sidebar
