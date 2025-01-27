@@ -5,7 +5,9 @@ return {
             ['<C-j>'] = require('telescope.actions').move_selection_next,
             ['<C-k>'] = require('telescope.actions').move_selection_previous,
             ['<C-b>'] = require('telescope.actions').delete_buffer,
+            ['<C-x>'] = require('telescope.actions').close,
             ['<Esc>'] = require('telescope.actions').close,
+            ['<C-s>'] = require('telescope.actions').file_split,
         }
 
         return conf
