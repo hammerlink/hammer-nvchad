@@ -41,5 +41,10 @@ map({ 'n', 't' }, '<A-s>', function()
     require('nvchad.term').toggle { pos = 'sp', id = 'htoggleTerm' }
 end, { desc = 'terminal toggleable horizontal term' })
 
+-- Overseer
+map('n', '<leader>ot', '<cmd> OverseerToggle <CR>', { desc = 'Overseer Toggle'})
+map('n', '<leader>or', '<cmd> OverseerRun <CR>', { desc = 'Overseer Run'})
+map('n', '<leader>oo', '<cmd> OverseerQuickAction <CR>', { desc = 'Overseer quick action'})
+
 -- Disable mappings
 local nomap = vim.keymap.del
