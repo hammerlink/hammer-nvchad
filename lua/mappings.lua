@@ -19,6 +19,35 @@ map('n', '<leader>fn', '<cmd> Telescope notify <cr>', { desc = 'Browse notificat
 map('n', '<leader>fx', function()
     require('telescope.builtin').diagnostics { bufnr = 0 }
 end, { desc = 'Find diagnostics' })
+map('n', '<leader>fw', function()
+    local search_dir = vim.fn.getcwd()
+    -- check if the nvim-tree is focused
+    if vim.bo.filetype == 'NvimTree' then
+        local selected_node = require('nvim-tree.api').tree.get_node_under_cursor()
+        if selected_node then
+            if selected_node.type == 'directory' then
+                search_dir = selected_node.absolute_path
+                print('telescope cwd ' .. search_dir)
+            end
+        end
+    end
+    require('telescope.builtin').live_grep { cwd = search_dir }
+end, { desc = 'Live grep' })
+
+map('n', '<leader>ff', function()
+    local search_dir = vim.fn.getcwd()
+    -- check if the nvim-tree is focused
+    if vim.bo.filetype == 'NvimTree' then
+        local selected_node = require('nvim-tree.api').tree.get_node_under_cursor()
+        if selected_node then
+            if selected_node.type == 'directory' then
+                search_dir = selected_node.absolute_path
+                print('telescope cwd ' .. search_dir)
+            end
+        end
+    end
+    require('telescope.builtin').find_files { cwd = search_dir }
+end, { desc = 'Find files' })
 
 -- LSP
 map('n', '<leader>li', '<cmd> LspInfo <cr>', { desc = 'LSP Info' })
@@ -42,9 +71,9 @@ map({ 'n', 't' }, '<A-s>', function()
 end, { desc = 'terminal toggleable horizontal term' })
 
 -- Overseer
-map('n', '<leader>ot', '<cmd> OverseerToggle <CR>', { desc = 'Overseer Toggle'})
-map('n', '<leader>or', '<cmd> OverseerRun <CR>', { desc = 'Overseer Run'})
-map('n', '<leader>oo', '<cmd> OverseerQuickAction <CR>', { desc = 'Overseer quick action'})
+map('n', '<leader>ot', '<cmd> OverseerToggle <CR>', { desc = 'Overseer Toggle' })
+map('n', '<leader>or', '<cmd> OverseerRun <CR>', { desc = 'Overseer Run' })
+map('n', '<leader>oo', '<cmd> OverseerQuickAction <CR>', { desc = 'Overseer quick action' })
 
 -- Disable mappings
 local nomap = vim.keymap.del
