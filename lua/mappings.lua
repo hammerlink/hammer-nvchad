@@ -82,5 +82,32 @@ map('n', '<leader>nx', '<cmd> lua require("notify").dismiss() <CR>', { desc = 'C
 -- Aerial
 map('n', '<leader>aet', '<cmd> AerialToggle <CR>', { desc = 'Aerial Toggle' })
 
+-- Gitsigns
+map('n', '<leader>rh', function()
+    require('gitsigns').reset_hunk()
+end, { desc = 'Reset hunk' })
+map('n', '<leader>ph', function()
+    require('gitsigns').preview_hunk()
+end, { desc = 'Preview hunk' })
+map('n', ']c', function()
+    if vim.wo.diff then
+        return ']c'
+    end
+    vim.schedule(function()
+        require('gitsigns').next_hunk()
+    end)
+    return '<Ignore>'
+end, { desc = 'Jump to next hunk', expr = true })
+
+map('n', '[c', function()
+    if vim.wo.diff then
+        return '[c'
+    end
+    vim.schedule(function()
+        require('gitsigns').prev_hunk()
+    end)
+    return '<Ignore>'
+end, { desc = 'Jump to previous hunk', expr = true })
+
 -- Disable mappings
 local nomap = vim.keymap.del
