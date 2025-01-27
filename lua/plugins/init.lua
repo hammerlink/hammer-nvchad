@@ -1,8 +1,9 @@
-local neogit_plugin = require('plugins.neogit')
-local telescope_plugin = require('plugins.telescope')
-local avante_plugin = require('plugins.avante')
-local cmp_plugin = require('plugins.cmp')
-local overseer_plugin = require('plugins.overseer')
+local neogit_plugin = require 'plugins.neogit'
+local telescope_plugin = require 'plugins.telescope'
+local avante_plugin = require 'plugins.avante'
+local cmp_plugin = require 'plugins.cmp'
+local overseer_plugin = require 'plugins.overseer'
+local aerial_plugin = require 'plugins.aerial'
 
 return {
     {
@@ -37,6 +38,7 @@ return {
             },
         },
     },
+    aerial_plugin,
     cmp_plugin,
     neogit_plugin,
     telescope_plugin,
