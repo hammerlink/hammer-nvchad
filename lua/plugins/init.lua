@@ -4,6 +4,7 @@ local avante_plugin = require 'plugins.avante'
 local cmp_plugin = require 'plugins.cmp'
 local overseer_plugin = require 'plugins.overseer'
 local aerial_plugin = require 'plugins.aerial'
+local copilot_plugin = require 'plugins.copilot'
 
 return {
     {
@@ -44,4 +45,5 @@ return {
     telescope_plugin,
     avante_plugin,
     overseer_plugin,
+    copilot_plugin,
 }
