@@ -52,6 +52,9 @@ end, { desc = 'Find files' })
 -- LSP
 map('n', '<leader>li', '<cmd> LspInfo <cr>', { desc = 'LSP Info' })
 map('n', '<leader>lr', '<cmd> LspRestart <cr>', { desc = 'LSP Restart' })
+map('n', '<leader>lf', function()
+    vim.diagnostic.open_float { border = 'rounded' }
+end, { desc = 'LSP Restart' })
 
 -- Avante
 map('n', '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
@@ -75,6 +78,9 @@ map('n', '<leader>ot', '<cmd> OverseerToggle <CR>', { desc = 'Overseer Toggle' }
 map('n', '<leader>or', '<cmd> OverseerRun <CR>', { desc = 'Overseer Run' })
 map('n', '<leader>oo', '<cmd> OverseerQuickAction <CR>', { desc = 'Overseer quick action' })
 map('n', '<leader>nx', '<cmd> lua require("notify").dismiss() <CR>', { desc = 'Close all notifications' })
+
+-- Aerial
+map('n', '<leader>aet', '<cmd> AerialToggle <CR>', { desc = 'Aerial Toggle' })
 
 -- Disable mappings
 local nomap = vim.keymap.del
