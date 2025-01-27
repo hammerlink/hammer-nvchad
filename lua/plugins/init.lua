@@ -1,3 +1,7 @@
+local neogit_plugin = require('plugins.neogit')
+local telescope_plugin = require('plugins.telescope')
+local avante_plugin = require('plugins.avante')
+
 return {
     {
         'stevearc/conform.nvim',
@@ -31,7 +35,7 @@ return {
             },
         },
     },
-    require 'lua.plugins.neogit',
-    require 'lua.plugins.telescope',
-    require 'lua.plugins.avante',
+    neogit_plugin,
+    telescope_plugin,
+    avante_plugin,
 }

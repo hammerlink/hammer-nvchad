@@ -24,5 +24,8 @@ end, { desc = 'Find diagnostics' })
 map('n', '<leader>li', '<cmd> LspInfo <cr>', { desc = 'LSP Info' })
 map('n', '<leader>lr', '<cmd> LspRestart <cr>', { desc = 'LSP Restart' })
 
+-- Avante
+map('n', '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
+
 -- Disable mappings
 local nomap = vim.keymap.del

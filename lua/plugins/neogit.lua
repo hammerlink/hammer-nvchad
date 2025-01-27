@@ -4,7 +4,7 @@ local M = {
         'nvim-lua/plenary.nvim',
         'sindrets/diffview.nvim',
     },
-    event = 'VeryLazy',
+    cmd = "Neogit",
     config = function()
         require('neogit').setup {
             integrations = {
