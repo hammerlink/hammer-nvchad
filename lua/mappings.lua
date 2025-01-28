@@ -54,6 +54,17 @@ map('n', '<leader>lr', '<cmd> LspRestart <cr>', { desc = 'LSP Restart' })
 map('n', '<leader>lf', function()
     vim.diagnostic.open_float { border = 'rounded' }
 end, { desc = 'LSP Restart' })
+map('n', 'gd', function()
+    vim.lsp.buf.definition {
+        on_list = function(options)
+            if #options.items == 1 then
+                return vim.lsp.buf.definition()
+            end
+            return require('telescope.builtin').lsp_definitions()
+        end,
+    }
+end, { desc = 'LSP Definition' })
+map('n', 'gr', '<cmd> Telescope lsp_references <cr>', { desc = 'LSP references' })
 
 -- Avante
 map('n', '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
