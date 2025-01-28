@@ -9,11 +9,30 @@ local nvlsp = require 'nvchad.configs.lspconfig'
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
+    local config = {
         on_attach = nvlsp.on_attach,
         on_init = nvlsp.on_init,
         capabilities = nvlsp.capabilities,
     }
+
+    -- Special configuration for rust-analyzer
+    if lsp == 'rust_analyzer' then
+        config.settings = {
+            ['rust-analyzer'] = {
+                checkOnSave = {
+                    command = 'clippy',
+                },
+                diagnostics = {
+                    enable = true,
+                    experimental = {
+                        enable = true,
+                    },
+                },
+            },
+        }
+    end
+
+    lspconfig[lsp].setup(config)
 end
 
 -- configuring single server, example: typescript
