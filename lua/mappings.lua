@@ -5,8 +5,7 @@ require 'nvchad.mappings'
 local map = vim.keymap.set
 
 -- escape modus
-map('i', 'fd', '<ESC>', { desc = 'custom escape' })
-map('v', 'fd', '<ESC>', { desc = 'custom escape' })
+map({'t', 'v', 'n', 'i'}, '<A-c>', '<ESC>', { desc = 'custom escape' })
 map('n', '<leader>tx', '<cmd> tabclose <CR>', { desc = 'Tab close' })
 
 -- neogit
