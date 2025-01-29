@@ -5,12 +5,22 @@ require 'nvchad.mappings'
 local map = vim.keymap.set
 
 -- escape modus
-map({'t', 'v', 'n', 'i'}, '<A-c>', '<ESC>', { desc = 'custom escape' })
+map({ 't', 'v', 'n', 'i' }, '<A-c>', '<ESC>', { desc = 'custom escape' })
 map('i', 'fd', '<ESC>', { desc = 'custom escape' })
 map('n', '<leader>tx', '<cmd> tabclose <CR>', { desc = 'Tab close' })
 
 -- neogit
 map('n', '<leader>gg', '<cmd> Neogit <cr>', { desc = 'Open NeoGit' })
+-- diffview
+map('n', '<leader>gd', '<cmd> DiffviewOpen <cr>', { desc = 'Git Changes Diffview' })
+map('n', '<leader>gh', '<cmd> DiffviewFileHistory <cr>', { desc = 'Git FileHistory Diffview all' })
+map(
+    { 'n', 'v' },
+    '<leader>gs',
+    '<cmd> DiffviewFileHistory % <cr>',
+    { desc = 'Gile FileHistory current buffer / selection' }
+)
+map('n', '<leader>gr', '<cmd> DiffviewRefresh <cr>', { desc = 'Diffview refresh' })
 
 -- telescope
 map('n', '<leader>fr', '<cmd> Telescope resume <cr>', { desc = 'Resume last find' })

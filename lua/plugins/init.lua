@@ -5,6 +5,7 @@ local cmp_plugin = require 'plugins.cmp'
 local overseer_plugin = require 'plugins.overseer'
 local aerial_plugin = require 'plugins.aerial'
 local copilot_plugin = require 'plugins.copilot'
+local diffview_plugin = require 'plugins.diffview'
 
 return {
     {
@@ -47,6 +48,7 @@ return {
     },
     aerial_plugin,
     cmp_plugin,
+    diffview_plugin,
     neogit_plugin,
     telescope_plugin,
     avante_plugin,
