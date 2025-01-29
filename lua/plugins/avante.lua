@@ -27,11 +27,11 @@ local M = {
         mappings = {
             --- @class AvanteConflictMappings
             diff = {
-                ours = 'do',
-                theirs = 'dt',
-                all_theirs = 'da',
-                both = 'db',
-                cursor = 'dc',
+                ours = '<A-d>o',
+                theirs = '<A-d>t',
+                all_theirs = '<A-d>a',
+                both = '<A-d>b',
+                cursor = '<A-d>c',
                 next = ']x',
                 prev = '[x',
             },
