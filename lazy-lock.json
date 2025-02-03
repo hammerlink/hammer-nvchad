@@ -35,6 +35,7 @@
   "render-markdown.nvim": { "branch": "main", "commit": "2a9e0ab6043bfb4996ce6a6a35594ab357e5d299" },
   "telescope.nvim": { "branch": "master", "commit": "415af52339215926d705cccc08145f3782c4d132" },
   "ui": { "branch": "v3.0", "commit": "7f70aac4ad4741c48a2d2f5abac84c06de226c5f" },
+  "undotree": { "branch": "master", "commit": "2556c6800b210b2096b55b66e74b4cc1d9ebbe4f" },
   "volt": { "branch": "main", "commit": "3bedb1576db574af160643eea7df3b09dbe5ee9c" },
   "which-key.nvim": { "branch": "main", "commit": "0e76a87ac51772569aec678dc74baa8e2a86100c" }
 }

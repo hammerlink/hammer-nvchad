@@ -46,6 +46,7 @@ return {
             },
         },
     },
+    { 'mbbill/undotree', cmd = 'UndotreeToggle' },
     aerial_plugin,
     cmp_plugin,
     diffview_plugin,

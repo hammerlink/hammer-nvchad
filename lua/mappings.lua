@@ -130,5 +130,9 @@ map('n', '[c', function()
     return '<Ignore>'
 end, { desc = 'Jump to previous hunk', expr = true })
 
+-- UndoTree
+map('n', '<leader>ut', '<cmd> UndotreeToggle <CR>', { desc = 'Undotree Toggle' })
+map('n', '<leader>ur', '<cmd> UndotreeFocus <CR>', { desc = 'Undotree Focus' })
+
 -- Disable mappings
 local nomap = vim.keymap.del
