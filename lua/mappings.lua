@@ -1,4 +1,5 @@
 require 'nvchad.mappings'
+local cargo_check = require 'rust.cargo-check'
 
 -- add yours here
 
@@ -76,6 +77,9 @@ map('n', 'gd', function()
     }
 end, { desc = 'LSP Definition' })
 map('n', 'gr', '<cmd> Telescope lsp_references <cr>', { desc = 'LSP references' })
+map('n', '<leader>lR', function()
+    cargo_check.CargoQuickfix()
+end, { desc = 'Cargo check' })
 
 -- Avante
 map('n', '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
