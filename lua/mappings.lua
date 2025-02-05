@@ -5,6 +5,7 @@ local cargo_check = require 'rust.cargo-check'
 
 local map = vim.keymap.set
 
+map({ 'x'}, 'p', 'p:let @+=@0<CR>:let @"=@0<CR>', { desc = 'Dont copy replaced text', silent = true })
 -- escape modus
 map({ 't', 'v', 'n', 'i' }, '<A-c>', '<ESC>', { desc = 'custom escape' })
 map('i', 'fd', '<ESC>', { desc = 'custom escape' })
