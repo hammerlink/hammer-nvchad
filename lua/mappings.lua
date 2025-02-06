@@ -139,5 +139,12 @@ end, { desc = 'Jump to previous hunk', expr = true })
 map('n', '<leader>ut', '<cmd> UndotreeToggle <CR>', { desc = 'Undotree Toggle' })
 map('n', '<leader>ur', '<cmd> UndotreeFocus <CR>', { desc = 'Undotree Focus' })
 
+-- NEOTEST
+map('n', '<leader>nt', ' "<cmd> Neotest summary toggle <CR>"', { desc = 'Neotest Toggle' })
+map('n', '<leader>na', ' "<cmd> Neotest attach <CR>"', { desc = 'Neotest attach logs' })
+map('n', '<leader>nr', ' "<cmd> Neotest run <CR>"', { desc = 'Neotest run closest' })
+map('n', '<leader>ndr', ' "<cmd> lua require("neotest").run.run({strategy = "dap"}) <CR>"', { desc = 'Neotest debug closest' })
+map('n', '<leader>no', ' "<cmd> Neotest output <CR>"', { desc = 'Neotest output' })
+
 -- Disable mappings
 local nomap = vim.keymap.del

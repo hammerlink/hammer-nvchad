@@ -6,8 +6,14 @@ local overseer_plugin = require 'plugins.overseer'
 local aerial_plugin = require 'plugins.aerial'
 local copilot_plugin = require 'plugins.copilot'
 local diffview_plugin = require 'plugins.diffview'
+local neotest_plugin = require 'plugins.neotest'
 
 return {
+    {
+        'folke/neoconf.nvim',
+        lazy = false,
+        priority = 1000,
+    },
     {
         'stevearc/conform.nvim',
         -- event = 'BufWritePre', -- uncomment for format on save
@@ -55,4 +61,5 @@ return {
     avante_plugin,
     overseer_plugin,
     copilot_plugin,
+    neotest_plugin,
 }
