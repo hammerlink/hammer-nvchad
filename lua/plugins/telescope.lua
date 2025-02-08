@@ -9,6 +9,19 @@ return {
             ['<Esc>'] = require('telescope.actions').close,
             ['<C-s>'] = require('telescope.actions').file_split,
         }
+        conf.defaults.vimgrep_arguments = {
+            'rg',
+            '-L',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+        }
+        conf.defaults.file_sorter = require("telescope.sorters").get_fuzzy_file
+        conf.defaults.file_ignore_patterns = { "node_modules" }
+        conf.defaults.generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter
 
         return conf
     end,
