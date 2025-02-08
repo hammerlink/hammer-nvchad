@@ -146,5 +146,11 @@ map('n', '<leader>nr', ' "<cmd> Neotest run <CR>"', { desc = 'Neotest run closes
 map('n', '<leader>ndr', ' "<cmd> lua require("neotest").run.run({strategy = "dap"}) <CR>"', { desc = 'Neotest debug closest' })
 map('n', '<leader>no', ' "<cmd> Neotest output <CR>"', { desc = 'Neotest output' })
 
+-- Print file path
+map('n', '<leader>fp', function()
+    local path = vim.fn.expand('%:p')
+    print(path)
+end, { desc = 'Print file absolute path' })
+
 -- Disable mappings
 local nomap = vim.keymap.del
