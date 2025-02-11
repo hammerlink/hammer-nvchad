@@ -4,7 +4,7 @@ require('nvchad.configs.lspconfig').defaults()
 local lspconfig = require 'lspconfig'
 
 -- EXAMPLE
-local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'ts_ls' }
+local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'ts_ls', 'vuels' }
 local nvlsp = require 'nvchad.configs.lspconfig'
 
 -- Store the original on_attach
