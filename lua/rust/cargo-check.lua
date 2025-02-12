@@ -4,7 +4,16 @@ M.CargoQuickfix = function()
     -- Get the full path of the current buffer
     local current_buffer_path = vim.fn.expand '%:p'
 
+    -- Get the directory of the current buffer
+    local buffer_dir = vim.fn.expand('%:p:h')
+    -- Save current working directory
+    local cwd = vim.fn.getcwd()
+    -- Change to buffer directory
+    vim.cmd('cd ' .. buffer_dir)
+    -- Execute cargo check
     local output = vim.fn.systemlist 'cargo check --message-format=json'
+    -- Restore original working directory
+    vim.cmd('cd ' .. cwd)
     local qflist = {}
 
     for _, line in ipairs(output) do
