@@ -10,11 +10,6 @@ local neotest_plugin = require 'plugins.neotest'
 
 return {
     {
-        'folke/neoconf.nvim',
-        lazy = false,
-        priority = 1000,
-    },
-    {
         'stevearc/conform.nvim',
         -- event = 'BufWritePre', -- uncomment for format on save
         opts = require 'configs.conform',

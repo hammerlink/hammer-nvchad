@@ -15,6 +15,7 @@ local lazy_config = require 'configs.lazy'
 
 -- load plugins
 require('lazy').setup({
+    { 'folke/neoconf.nvim', config = true, lazy = false },
     {
         'NvChad/NvChad',
         lazy = false,
