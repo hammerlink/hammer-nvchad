@@ -19,7 +19,7 @@ map('n', '<leader>gh', '<cmd> DiffviewFileHistory <cr>', { desc = 'Git FileHisto
 map(
     { 'n', 'v' },
     '<leader>gs',
-    '<cmd> DiffviewFileHistory % <cr>',
+    ':DiffviewFileHistory %<cr>',
     { desc = 'Gile FileHistory current buffer / selection' }
 )
 map('n', '<leader>gr', '<cmd> DiffviewRefresh <cr>', { desc = 'Diffview refresh' })
