@@ -5,7 +5,7 @@ local cargo_check = require 'rust.cargo-check'
 
 local map = vim.keymap.set
 
-map({ 'x'}, 'p', 'p:let @+=@0<CR>:let @"=@0<CR>', { desc = 'Dont copy replaced text', silent = true })
+map({ 'x' }, 'p', 'p:let @+=@0<CR>:let @"=@0<CR>', { desc = 'Dont copy replaced text', silent = true })
 -- escape modus
 map({ 't', 'v', 'n', 'i' }, '<A-c>', '<ESC>', { desc = 'custom escape' })
 map('i', 'fd', '<ESC>', { desc = 'custom escape' })
@@ -16,12 +16,7 @@ map('n', '<leader>gg', '<cmd> Neogit <cr>', { desc = 'Open NeoGit' })
 -- diffview
 map('n', '<leader>gd', '<cmd> DiffviewOpen <cr>', { desc = 'Git Changes Diffview' })
 map('n', '<leader>gh', '<cmd> DiffviewFileHistory <cr>', { desc = 'Git FileHistory Diffview all' })
-map(
-    { 'n', 'v' },
-    '<leader>gs',
-    ':DiffviewFileHistory %<cr>',
-    { desc = 'Gile FileHistory current buffer / selection' }
-)
+map({ 'n', 'v' }, '<leader>gs', ':DiffviewFileHistory %<cr>', { desc = 'Gile FileHistory current buffer / selection' })
 map('n', '<leader>gr', '<cmd> DiffviewRefresh <cr>', { desc = 'Diffview refresh' })
 
 -- telescope
@@ -83,7 +78,7 @@ map('n', '<leader>lR', function()
 end, { desc = 'Cargo check' })
 
 -- Avante
-map('n', '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
+map({ 'n', 'v' }, '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
 
 -- Tabbufline
 map('n', '<A-l>', function()
@@ -143,12 +138,17 @@ map('n', '<leader>ur', '<cmd> UndotreeFocus <CR>', { desc = 'Undotree Focus' })
 map('n', '<leader>nt', ' "<cmd> Neotest summary toggle <CR>"', { desc = 'Neotest Toggle' })
 map('n', '<leader>na', ' "<cmd> Neotest attach <CR>"', { desc = 'Neotest attach logs' })
 map('n', '<leader>nr', ' "<cmd> Neotest run <CR>"', { desc = 'Neotest run closest' })
-map('n', '<leader>ndr', ' "<cmd> lua require("neotest").run.run({strategy = "dap"}) <CR>"', { desc = 'Neotest debug closest' })
+map(
+    'n',
+    '<leader>ndr',
+    ' "<cmd> lua require("neotest").run.run({strategy = "dap"}) <CR>"',
+    { desc = 'Neotest debug closest' }
+)
 map('n', '<leader>no', ' "<cmd> Neotest output <CR>"', { desc = 'Neotest output' })
 
 -- Print file path
 map('n', '<leader>fp', function()
-    local path = vim.fn.expand('%:p')
+    local path = vim.fn.expand '%:p'
     print(path)
 end, { desc = 'Print file absolute path' })
 
