@@ -15,6 +15,8 @@ opt.relativenumber = true
 opt.numberwidth = 2
 opt.ruler = false
 
+opt.laststatus = 3
+
 -- add yours here!
 
 -- local o = vim.o
