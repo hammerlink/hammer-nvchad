@@ -4,6 +4,8 @@ local options = {
         javascript = { 'prettier' },
         typescript = { 'prettier' },
         vue = { 'prettier' },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
         -- css = { "prettier" },
         -- html = { "prettier" },
     },
