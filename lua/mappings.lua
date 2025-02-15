@@ -78,7 +78,13 @@ map('n', '<leader>lR', function()
 end, { desc = 'Cargo check' })
 
 -- Avante
-map({ 'n', 'v' }, '<leader>ax', '<cmd> AvanteClear <cr>', { desc = 'Avante Clear' })
+map({ 'n', 'v' }, '<leader>ax', function()
+    vim.cmd('AvanteClear')
+    -- Wait for 100ms before asking
+    vim.defer_fn(function()
+        vim.cmd('AvanteAsk')
+    end, 100)
+end, { desc = 'Avante Clear and Ask' })
 
 -- Tabbufline
 map('n', '<A-l>', function()
