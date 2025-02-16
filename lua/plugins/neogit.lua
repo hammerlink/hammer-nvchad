@@ -7,9 +7,6 @@ local M = {
     cmd = "Neogit",
     config = function()
         -- Configure notify to avoid background warning
-        require("notify").setup({
-            background_colour = "#1a1b26", -- You can adjust this hex color to match your theme
-        })
 
         require('neogit').setup {
             integrations = {

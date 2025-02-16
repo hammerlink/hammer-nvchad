@@ -5,12 +5,7 @@ local M = {
         {
             'stevearc/dressing.nvim',
             dependencies = {
-                {
-                    'rcarriga/nvim-notify',
-                    config = function()
-                        vim.notify = require 'notify'
-                    end,
-                },
+                { 'rcarriga/nvim-notify' },
             },
             opts = {},
         },

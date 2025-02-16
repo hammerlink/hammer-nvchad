@@ -7,6 +7,7 @@ local aerial_plugin = require 'plugins.aerial'
 local copilot_plugin = require 'plugins.copilot'
 local diffview_plugin = require 'plugins.diffview'
 local neotest_plugin = require 'plugins.neotest'
+local notify_plugin = require 'plugins.notify'
 
 return {
     {
@@ -48,6 +49,7 @@ return {
         },
     },
     { 'mbbill/undotree', cmd = 'UndotreeToggle' },
+    notify_plugin,
     aerial_plugin,
     cmp_plugin,
     diffview_plugin,
