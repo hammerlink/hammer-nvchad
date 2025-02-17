@@ -2,10 +2,13 @@ local options = {
     formatters_by_ft = {
         lua = { 'stylua' },
         javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },  -- for .jsx files
         typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },  -- for .tsx files
         vue = { 'prettier' },
         c = { 'clang_format' },
         cpp = { 'clang_format' },
+        mdx = { 'prettier' },
         -- css = { "prettier" },
         -- html = { "prettier" },
     },
