@@ -28,17 +28,31 @@ local M = {
         'nvim-lua/plenary.nvim',
         'antoinemadec/FixCursorHold.nvim',
         'nvim-treesitter/nvim-treesitter',
+        'marilari88/neotest-vitest',
+        -- 'alfaix/neotest-gtest',
+        -- 'rouge8/neotest-rust',
+        'MarkEmmons/neotest-deno',
     },
     cmd = 'Neotest',
     config = function()
         require('neotest').setup {
             adapters = {
+                -- require 'neotest-rust' {
+                --     args = { '--no-capture' },
+                --     dap_adapter = 'codelldb', -- LLDB MISSING!!
+                -- },
                 require 'neotest-vitest' {
                     cwd = function(path)
                         local closest_dir = find_closest_package_json_dir(path, vim.fn.getcwd())
                         return closest_dir
                     end,
                 },
+                require 'neotest-deno' {},
+                -- require('neotest-gtest').setup {
+                --     -- Optional config
+                --     root_pattern = 'CMakeLists.txt', -- Pattern to find project root
+                --     executable_pattern = 'build/*', -- Pattern to find executables
+                -- },
             },
         }
     end,
