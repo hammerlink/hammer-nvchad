@@ -1,5 +1,8 @@
 local M = {
     'yetone/avante.nvim',
+    init = function()
+        require 'configs.avante'
+    end,
     event = 'VeryLazy',
     lazy = false,
     version = false, -- set this if you want to always pull the latest change
@@ -106,7 +109,7 @@ local M = {
         },
         rag_service = {
             enabled = false,
-        }
+        },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = 'make',
