@@ -1,10 +1,20 @@
+local utils = require 'utils';
+
 local options = {
     formatters_by_ft = {
         lua = { 'stylua' },
-        javascript = { 'prettier' },
-        javascriptreact = { 'prettier' },  -- for .jsx files
-        typescript = { 'prettier' },
-        typescriptreact = { 'prettier' },  -- for .tsx files
+        javascript = function()
+            return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
+        end,
+        javascriptreact = function()
+            return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
+        end,  -- for .jsx files
+        typescript = function()
+            return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
+        end,
+        typescriptreact = function()
+            return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
+        end,  -- for .tsx files
         vue = { 'prettier' },
         c = { 'clang_format' },
         cpp = { 'clang_format' },
