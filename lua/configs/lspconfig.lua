@@ -3,8 +3,20 @@ require('nvchad.configs.lspconfig').defaults()
 
 local lspconfig = require 'lspconfig'
 
--- EXAMPLE
-local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'ts_ls', 'vuels', 'denols' }
+-- Define a function to check if a Deno project is detected
+local function is_deno_project()
+    return lspconfig.util.root_pattern('deno.json', 'deno.jsonc')(vim.fn.getcwd()) ~= nil
+end
+
+local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'vuels' }
+if is_deno_project() then
+    table.insert(servers, 'denols')
+    vim.notify('Deno project detected: Using denols language server', vim.log.levels.INFO)
+else
+    table.insert(servers, 'ts_ls')
+    print 'Using TypeScript language server (ts_ls)'
+end
+
 local nvlsp = require 'nvchad.configs.lspconfig'
 
 -- Store the original on_attach
