@@ -18,6 +18,8 @@ end
 for i, tool in ipairs(all_tools) do
     -- Set tool.enabled to false if not in the enabled_tools list
     if not enabled_tools_lookup[tool.name] then
-        tool.enabled = false
+        tool.enabled = function ()
+            return false
+        end
     end
 end
