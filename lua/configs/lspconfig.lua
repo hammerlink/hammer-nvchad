@@ -79,6 +79,14 @@ for _, lsp in ipairs(servers) do
                 },
             },
         }
+    -- Special configuration for deno
+    elseif lsp == 'denols' then
+        config.root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc')
+        config.init_options = {
+            enable = true,
+            lint = true,
+            unstable = false,
+        }
     end
 
     lspconfig[lsp].setup(config)
