@@ -11,10 +11,10 @@ Hi! I'm Hendrik Hamerlinck ([@hammerlink](https://github.com/hammerlink)), and t
 - Built on [NvChad](https://github.com/NvChad/NvChad) as the base configuration
 - Enhanced development workflow with:
   - [overseer.nvim](https://github.com/stevearc/overseer.nvim) for task management
-  - [neotest](https://github.com/nvim-neotest/neotest) with [avant](https://github.com/avantgardnerio/avant) for testing
+  - [neotest](https://github.com/nvim-neotest/neotest) with [avante](https://github.com/yetone/avante.nvim) for testing
 - Optimized for multiple languages:
   - TypeScript
-  - Deno (with LSP support)
+  - Deno (with LSP support and automatic detection)
   - Rust
   - C/C++
 
@@ -24,6 +24,16 @@ This repository uses NvChad as a plugin. To use this configuration:
 
 1. Clone this repository to your Neovim config directory
 2. The main NvChad modules are imported via `require "nvchad.options"`, `require "nvchad.mappings"`, etc.
+
+## 🔧 Language Server Configuration
+
+### Deno and TypeScript
+
+- When a `deno.json` file is detected in your project, the Deno LSP is automatically preferred over the TypeScript LSP
+- This ensures proper handling of Deno-specific features and import resolution
+- No manual configuration is needed - the setup automatically detects and switches based on project type
+
+My personal preference tends towards Deno as they seem to have a very good long-term vision for the language ecosystem.
 
 ## 🙏 Credits
 
