@@ -54,18 +54,18 @@ overseer.register_template {
         local cmd = { 'echo' }
         local args = { cwd_file }
 
-        if filetype == 'js' then
-            if custom_utils.root_js_type == custom_utils.RootJsTypes.DENO then
+        if filetype == 'js' or filetype == 'ts' then
+            if custom_utils.is_deno then
                 cmd = { 'deno' }
+                args = { 'run', '--allow-all', cwd_file }
+            elseif custom_utils.is_bun then
+                cmd = { 'bun' }
+                args = { 'run', cwd_file }
             else
                 cmd = { 'node' }
-            end
-        elseif filetype == 'ts' then
-            if custom_utils.root_js_type == custom_utils.RootJsTypes.DENO then
-                cmd = { 'deno' }
-            else
-                cmd = { 'node' }
-                args = { '-r', 'ts-node/register', cwd_file }
+                if filetype == 'ts' then
+                    args = { '-r', 'ts-node/register', cwd_file }
+                end
             end
         elseif filetype == 'rs' then
             cmd = { 'rust-script' }

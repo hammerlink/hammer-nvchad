@@ -15,18 +15,8 @@ M.root_cwd_file_exists = function(root_file)
     local file_path = root_dir .. '/' .. root_file -- Construct the file path
     return vim.fn.filereadable(file_path) ~= 0
 end
-
-if M.root_cwd_file_exists 'deno.json' then
-    M.root_js_type = RootJsTypes.DENO
-elseif M.root_cwd_file_exists 'bunfig.toml' then
-    M.root_js_type = RootJsTypes.BUN
-elseif M.root_cwd_file_exists 'package.json' then
-    if M.root_cwd_file_exists 'pnpm-workspace.yml' then
-        M.root_js_type = RootJsTypes.PNPM_MONOREPO
-    else
-        M.root_js_type = RootJsTypes.JS
-    end
-end
+M.is_deno = M.root_cwd_file_exists 'deno.json'
+M.is_bun = M.root_cwd_file_exists 'bun.lock'
 
 M.find_closest_package_json_dir = function(start_path, default_value)
     -- Get the current buffer's full path

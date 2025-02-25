@@ -1,5 +1,6 @@
 -- load defaults i.e lua_lsp
 require('nvchad.configs.lspconfig').defaults()
+local utils = require 'utils'
 
 local lspconfig = require 'lspconfig'
 
@@ -9,7 +10,7 @@ local function is_deno_project()
 end
 
 local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'vuels' }
-if is_deno_project() then
+if utils.is_deno then
     table.insert(servers, 'denols')
     vim.notify('Deno project detected: Using denols language server', vim.log.levels.INFO)
 else
