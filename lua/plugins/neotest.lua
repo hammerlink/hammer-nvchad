@@ -31,7 +31,6 @@ local M = {
         'marilari88/neotest-vitest',
         -- 'alfaix/neotest-gtest',
         -- 'rouge8/neotest-rust',
-        'MarkEmmons/neotest-deno',
     },
     cmd = 'Neotest',
     config = function()
@@ -47,7 +46,9 @@ local M = {
                         return closest_dir
                     end,
                 },
-                require 'neotest-deno' {},
+
+                require 'deno-test' {},
+
                 -- require('neotest-gtest').setup {
                 --     -- Optional config
                 --     root_pattern = 'CMakeLists.txt', -- Pattern to find project root
