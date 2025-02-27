@@ -25,14 +25,11 @@ local default_config = {
 
 ---@class neotest.Adapter
 ---@field name string
----@field root string|nil
 local NeotestAdapter = { name = 'neotest-deno' }
 
 ---Find the project root directory
----@param path string File path
----@return string|nil
 function NeotestAdapter.root(path)
-    return lib.files.match_root_pattern(unpack(default_config.root_files))(path)
+    return lib.files.match_root_pattern("deno.json")(path)
 end
 
 ---Filter directories when searching for test files
@@ -49,34 +46,26 @@ end
 ---@return boolean
 function NeotestAdapter.is_test_file(file_path)
     if file_path == nil then
+        print("File path is nil")
         return false
     end
-    
+
     -- Check if file is in __tests__ directory
     if string.match(file_path, '__tests__') then
         return true
     end
-    
-    -- Helper function to match file against glob pattern
-    local function is_file_match(path, pattern)
-        -- Convert glob pattern to Lua pattern
-        local lua_pattern = pattern:gsub('%.', '%%.')
-                                   :gsub('%*%*', '.*')
-                                   :gsub('%*', '[^/]*')
-                                   :gsub('%(', '%%(')
-                                   :gsub('%)', '%%)')
-                                   :gsub('%?', '.')
-        
-        return path:match(lua_pattern) ~= nil
-    end
-    
+
     -- Check against configured test patterns
-    for _, pattern in ipairs(default_config.test_patterns) do
-        if is_file_match(file_path, pattern) then
+    for _, x in ipairs({ "test" }) do
+      for _, ext in ipairs({ "ts", "tsx", "mts", "js", "mjs", "jsx" }) do
+        if string.match(file_path, "%." .. x .. "%." .. ext .. "$") or
+           string.match(file_path, "_" .. x .. "%." .. ext .. "$") then
             return true
         end
+      end
     end
-    
+
+    print("File is not a test file")
     return false
 end
 
@@ -86,42 +75,67 @@ end
 ---@return neotest.Tree|nil
 function NeotestAdapter.discover_positions(file_path)
     local query = [[
-    ;; Deno test functions
+    ; Basic Deno.test with a named function
     (call_expression
-      function: (identifier) @func_name (#match? @func_name "^(test|Deno\\.test)$")
-      arguments: (arguments
-        (string (string_fragment) @test_name)
-        (arrow_function) @test_definition
+      function: (member_expression
+        object: (identifier) @object (#eq? @object "Deno")
+        property: (property_identifier) @property (#eq? @property "test")
       )
-    ) @test_position
+      arguments: (arguments
+        (function_expression
+          name: (identifier) @test.name
+        ) @test.function
+      )
+    ) @test.definition
 
-    ;; Deno test with object argument
+    ; Deno.test with a string name and function expression
     (call_expression
-      function: (identifier) @func_name (#match? @func_name "^(test|Deno\\.test)$")
+      function: (member_expression
+        object: (identifier) @object (#eq? @object "Deno")
+        property: (property_identifier) @property (#eq? @property "test")
+      )
+      arguments: (arguments
+        (string (string_fragment) @test.name)
+        (function_expression) @test.function
+      )
+    ) @test.definition
+
+    ; Deno.test with just an anonymous function or arrow function
+    (call_expression
+      function: (member_expression
+        object: (identifier) @object (#eq? @object "Deno")
+        property: (property_identifier) @property (#eq? @property "test")
+      )
+      arguments: (arguments
+        (string (string_fragment) @test.name)
+        (arrow_function) @test.function
+      )
+    ) @test.definition
+
+    ; Deno.test with options object
+    (call_expression
+      function: (member_expression
+        object: (identifier) @object (#eq? @object "Deno")
+        property: (property_identifier) @property (#eq? @property "test")
+      )
       arguments: (arguments
         (object
           (pair
-            key: (property_identifier) @key_name (#match? @key_name "^name$")
-            value: (string (string_fragment) @test_name)
+            key: (property_identifier) @key1 (#eq? @key1 "name")
+            value: (string (string_fragment) @test.name)
+          )
+          (pair
+            key: (property_identifier) @key2 (#eq? @key2 "fn")
+            value: (arrow_function) @test.function
+          )
           )
         )
-        (arrow_function) @test_definition
-      )
-    ) @test_position
+      ) @test.definition
   ]]
 
-    local tree = lib.treesitter.parse_positions(file_path, query, {
-        position_id = function(position, parent_id)
-            return parent_id .. '::' .. position.name
-        end,
-        require_namespaces = {},
-    })
 
-    if not tree then
-        return nil
-    end
 
-    return tree
+    return lib.treesitter.parse_positions(file_path, query, { nested_tests = true })
 end
 
 ---Build the command to run the test
@@ -207,7 +221,7 @@ function NeotestAdapter.results(spec, result, tree)
                 logger.error("Test result missing name: " .. vim.inspect(test_result))
                 goto continue
             end
-            
+
             local test_id = base_id .. '::' .. test_name
 
             local status = 'failed'
@@ -223,7 +237,7 @@ function NeotestAdapter.results(spec, result, tree)
                 output = test_result.output or '',
                 errors = test_result.error and { { message = test_result.error } } or nil,
             }
-            
+
             ::continue::
         end
     end
@@ -252,10 +266,10 @@ end
 ---@param config neotest-deno.Config
 local function setup(config)
     config = vim.tbl_deep_extend('force', default_config, config or {})
-    
+
     -- Update the default config with user settings
     default_config = config
-    
+
     return NeotestAdapter
 end
 
