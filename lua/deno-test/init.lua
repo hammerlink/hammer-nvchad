@@ -2,7 +2,6 @@ local async = require 'neotest.async'
 local lib = require 'neotest.lib'
 local logger = require 'neotest.logging'
 
-
 ---@class neotest-deno.Config
 ---@field deno_cmd string Command to run deno
 ---@field root_files string[] Files indicating the root of a Deno project
@@ -25,11 +24,11 @@ local default_config = {
 
 ---@class neotest.Adapter
 ---@field name string
-local NeotestAdapter = { name = 'neotest-deno' }
+local NeotestAdapter = { name = 'neotest-deno', results = require 'deno-test.collect-results' }
 
 ---Find the project root directory
 function NeotestAdapter.root(path)
-    return lib.files.match_root_pattern("deno.json")(path)
+    return lib.files.match_root_pattern 'deno.json'(path)
 end
 
 ---Filter directories when searching for test files
@@ -46,7 +45,7 @@ end
 ---@return boolean
 function NeotestAdapter.is_test_file(file_path)
     if file_path == nil then
-        print("File path is nil")
+        -- print 'File path is nil'
         return false
     end
 
@@ -56,16 +55,18 @@ function NeotestAdapter.is_test_file(file_path)
     end
 
     -- Check against configured test patterns
-    for _, x in ipairs({ "test" }) do
-      for _, ext in ipairs({ "ts", "tsx", "mts", "js", "mjs", "jsx" }) do
-        if string.match(file_path, "%." .. x .. "%." .. ext .. "$") or
-           string.match(file_path, "_" .. x .. "%." .. ext .. "$") then
-            return true
+    for _, x in ipairs { 'test' } do
+        for _, ext in ipairs { 'ts', 'tsx', 'mts', 'js', 'mjs', 'jsx' } do
+            if
+                string.match(file_path, '%.' .. x .. '%.' .. ext .. '$')
+                or string.match(file_path, '_' .. x .. '%.' .. ext .. '$')
+            then
+                return true
+            end
         end
-      end
     end
 
-    print("File is not a test file")
+    -- print 'File is not a test file'
     return false
 end
 
@@ -133,8 +134,6 @@ function NeotestAdapter.discover_positions(file_path)
       ) @test.definition
   ]]
 
-
-
     return lib.treesitter.parse_positions(file_path, query, { nested_tests = true })
 end
 
@@ -147,6 +146,7 @@ function NeotestAdapter.build_spec(args)
         default_config.deno_cmd,
         'test',
         '--allow-all',
+        '--reporter=junit',
     }
 
     -- Add any extra arguments from config
@@ -158,7 +158,7 @@ function NeotestAdapter.build_spec(args)
     if position.type == 'test' then
         local test_name = position.name
         -- Escape special characters in the test name for the filter
-        test_name = test_name:gsub("([%(%)%.%[%]%*%+%-%?%$%^])", "\\%1")
+        test_name = test_name:gsub('([%(%)%.%[%]%*%+%-%?%$%^])', '\\%1')
         table.insert(command, '--filter')
         table.insert(command, test_name)
     end
@@ -166,7 +166,7 @@ function NeotestAdapter.build_spec(args)
     -- Add the file path
     table.insert(command, file_path)
 
-    logger.info("Running Deno test command: " .. table.concat(command, " "))
+    logger.info('Running Deno test command: ' .. table.concat(command, ' '))
 
     return {
         command = command,
@@ -178,85 +178,84 @@ function NeotestAdapter.build_spec(args)
     }
 end
 
----Parse the output of the test command
----@async
----@param spec neotest.RunSpec
----@param result neotest.StrategyResult
----@param tree neotest.Tree
----@return table<string, neotest.Result>
-function NeotestAdapter.results(spec, result, tree)
-    local results = {}
-    local position_id = spec.context.position_id
-    local file_path = spec.context.file
-
-    -- Default result in case parsing fails
-    results[position_id] = {
-        status = 'failed',
-        short = 'Error parsing test results',
-    }
-
-    if result.code ~= 0 and not result.output then
-        return results
-    end
-
-    -- Try to parse the JSON output
-    local success, parsed = pcall(vim.json.decode, result.output)
-    if not success or not parsed then
-        logger.error('Failed to parse JSON output: ' .. (result.output or 'nil'))
-        return results
-    end
-
-    logger.debug("Deno test results: " .. vim.inspect(parsed))
-
-    -- Process the parsed results
-    local function process_test_results(test_results, base_id)
-        for _, test_result in ipairs(test_results or {}) do
-            local test_name = test_result.name
-            if not test_name then
-                logger.error("Test result missing name: " .. vim.inspect(test_result))
-                goto continue
-            end
-
-            local test_id = base_id .. '::' .. test_name
-
-            local status = 'failed'
-            if test_result.ok then
-                status = 'passed'
-            elseif test_result.skipped then
-                status = 'skipped'
-            end
-
-            results[test_id] = {
-                status = status,
-                short = test_result.message or '',
-                output = test_result.output or '',
-                errors = test_result.error and { { message = test_result.error } } or nil,
-            }
-
-            ::continue::
-        end
-    end
-
-    -- Handle different JSON output formats from Deno
-    if parsed.testResults then
-
-        process_test_results(parsed.testResults, position_id)
-    elseif parsed.tests then
-
-        process_test_results(parsed.tests, position_id)
-    elseif type(parsed) == "table" and #parsed > 0 then
-        -- Deno sometimes outputs an array of test results
-        process_test_results(parsed, position_id)
-    else
-        -- If we can't find structured results, set the file result based on exit code
-        results[position_id] = {
-            status = result.code == 0 and 'passed' or 'failed',
-            output = result.output,
-        }
-    end
-
-    return results
-end
+-- ---Parse the output of the test command
+-- ---@async
+-- function NeotestAdapter.results(spec, result, tree)
+--     local results = {}
+--     local position_id = spec.context.position_id
+--     local file_path = spec.context.file
+--
+--     -- Default result in case parsing fails
+--     results[position_id] = {
+--         status = 'failed',
+--         short = 'Error parsing test results',
+--     }
+--
+--     if result.code ~= 0 and not result.output then
+--         return results
+--     end
+--
+--     print(result.output) -- this returns a file path in the tmp dir
+--     print(file_path) -- /home/hendrik/Projects/deno-dap/second_test.ts
+--     print(position_id) --  /home/hendrik/Projects/deno-dap/second_test.ts::secondTest
+--     -- Try to parse the JSON output
+--     local success, parsed = pcall(vim.json.decode, result.output)
+--     if not success or not parsed then
+--         logger.error('Failed to parse JSON output: ' .. (result.output or 'nil'))
+--         return results
+--     end
+--
+--     logger.debug("Deno test results: " .. vim.inspect(parsed))
+--
+--     -- Process the parsed results
+--     local function process_test_results(test_results, base_id)
+--         for _, test_result in ipairs(test_results or {}) do
+--             local test_name = test_result.name
+--             if not test_name then
+--                 logger.error("Test result missing name: " .. vim.inspect(test_result))
+--                 goto continue
+--             end
+--
+--             local test_id = base_id .. '::' .. test_name
+--
+--             local status = 'failed'
+--             if test_result.ok then
+--                 status = 'passed'
+--             elseif test_result.skipped then
+--                 status = 'skipped'
+--             end
+--
+--             results[test_id] = {
+--                 status = status,
+--                 short = test_result.message or '',
+--                 output = test_result.output or '',
+--                 errors = test_result.error and { { message = test_result.error } } or nil,
+--             }
+--
+--             ::continue::
+--         end
+--     end
+--
+--     -- Handle different JSON output formats from Deno
+--     if parsed.testResults then
+--
+--         process_test_results(parsed.testResults, position_id)
+--     elseif parsed.tests then
+--
+--         process_test_results(parsed.tests, position_id)
+--     elseif type(parsed) == "table" and #parsed > 0 then
+--         -- Deno sometimes outputs an array of test results
+--         process_test_results(parsed, position_id)
+--     else
+--         -- If we can't find structured results, set the file result based on exit code
+--         results[position_id] = {
+--             status = result.code == 0 and 'passed' or 'failed',
+--             output = result.output,
+--         }
+--     end
+--
+--     return results
+-- end
 
 ---@param config neotest-deno.Config
 local function setup(config)
