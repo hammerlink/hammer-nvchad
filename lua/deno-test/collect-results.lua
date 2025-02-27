@@ -114,7 +114,7 @@ return function(build_specfication, result, tree)
     -- print(file_path) -- /home/hendrik/Projects/deno-dap/second_test.ts
     -- print(position_id) --  /home/hendrik/Projects/deno-dap/second_test.ts::secondTest
     local position = tree:data()
-    local junit_reports = { parse_xml_file(result.output) }
+    local junit_reports = parse_xml_file(result.output)
 
     --- Keep track of total number of tests that passed, failed, and were skipped.
     local status_counts = {
