@@ -139,8 +139,6 @@ function NeotestAdapter.discover_positions(file_path)
 end
 
 ---Build the command to run the test
----@param args neotest.RunArgs
----@return neotest.RunSpec|nil
 function NeotestAdapter.build_spec(args)
     local position = args.tree:data()
     local file_path = position.path
@@ -149,9 +147,6 @@ function NeotestAdapter.build_spec(args)
         default_config.deno_cmd,
         'test',
         '--allow-all',
-        '--unstable',
-        '--no-check',
-        '--json', -- Required for parsing results
     }
 
     -- Add any extra arguments from config
