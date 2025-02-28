@@ -1,36 +1,5 @@
 local lib = require 'neotest.lib'
 
-local function parse_xml_file(file_path)
-    local content = lib.files.read(file_path)
-    print(content)
-    return lib.xml.parse(content)
-end
---- Searches for all files XML files in this directory (not recursive) and
---- parses their content as Lua tables using some Neotest utility.
----
---- @param directory_path string
---- @return table[] - list of parsed XML tables
-local function parse_xml_files_from_directory(directory_path)
-    local xml_file_extension = '.xml'
-    local xml_files = lib.files.find(directory_path, {
-        filter_dir = function(file_name)
-            return file_name:sub(-#xml_file_extension) == xml_file_extension
-        end,
-    })
-
-    return vim.tbl_map(parse_xml_file, xml_files)
-end
-
---- If the value is a list itself it gets returned as is. Else a new list will be
---- created with the value as first element.
---- E.g.: { 'a', 'b' } => { 'a', 'b' } | 'a' => { 'a' }
----
---- @param value any
---- @return table
-local function as_list(value)
-    return (type(value) == 'table' and #value > 0) and value or { value }
-end
-
 --- This tries to find the position in the tree that belongs to this test case
 --- result from the JUnit report XML. Therefore it parses the location from the
 --- node attributes and compares it with the position information in the tree.
@@ -39,49 +8,50 @@ end
 --- @param test_case_node table - XML node of test case result
 --- @return table | nil - see neotest.Position
 local function find_position_for_test_case(tree, test_case_node)
-    local function_name = test_case_node._attr.name:gsub('%(%)', '')
-    local package_and_class = (test_case_node._attr.classname:gsub('%$', '%.'))
+    local cwd = vim.loop.cwd()
+    local test_path = cwd .. '/' .. test_case_node._attr.classname:gsub('^%./', '')
 
+    -- print(test_path)
+    --     example test_case_node
+    -- {
+    --   _attr = {
+    --     classname = "./second_test.ts",
+    --     col = "6",
+    --     line = "4",
+    --     name = "secondTest",
+    --     time = "1.001"
+    --   }
+    -- }
     for _, position in tree:iter() do
-        if
-            position.handle_name
-            and position.handle_name == function_name
-            and vim.startswith(position.id, package_and_class)
-        then
+        -- example position
+        -- position
+        -- {
+        --   id = "/home/hendrik/Projects/deno-dap/second_test.ts::secondTest",
+        --   name = "secondTest",
+        --   path = "/home/hendrik/Projects/deno-dap/second_test.ts",
+        --   range = { 3, 0, 7, 2 },
+        --   type = "test"
+        -- }
+
+        -- print 'position'
+        -- print(vim.inspect(position))
+        if position.name and position.name == test_case_node._attr.name and position.path == test_path then
             return position
         end
     end
 end
 
---- Convert a JUnit failure report into a Neotest error. It parses the failure
---- message and removes the Exception path from it. Furthermore it tries to parse
---- the stack trace to find a line number within the executed test case.
----
---- @param failure_node table - XML node of failure report in of a test case
---- @param position table - matched Neotest position of this test case (see neotest.Position)
---- @return table - see neotest.Error
-local function parse_error_from_failure_xml(failure_node, position)
-    local type = failure_node._attr.type
-    local message = (failure_node._attr.message:gsub(type .. '.*\n', ''))
-
-    local stack_trace = failure_node[1] or ''
-    local line_number
-
-    --- The position.path could be a directory or a file. If a directory don't bother with the
-    --- rest as it will throw an error.
-    if position.path:match '%.java$' then
-        for _, line in ipairs(vim.split(stack_trace, '[\r]?\n')) do
-            local pattern = '^.*at.+' .. position.id .. '.*%(.+..+:(%d+)%)$'
-            local match = line:match(pattern)
-
-            if match then
-                line_number = tonumber(match) - 1
-                break
-            end
-        end
+local strip_ansi = function(str)
+    if not str then
+        return nil
     end
-
-    return { message = message, line = line_number }
+    -- Pattern to match ANSI escape sequences
+    local pattern = '\27%[[^m]*m'
+    -- Replace all ANSI sequences with empty string
+    local result = string.gsub(str, pattern, '')
+    -- Also remove carriage returns
+    result = string.gsub(result, '\r', '')
+    return result
 end
 
 --- See Neotest adapter specification.
@@ -98,7 +68,7 @@ end
 return function(build_specfication, result, tree)
     local results = {}
     local position_id = build_specfication.context.position_id
-    local file_path = build_specfication.context.file
+    -- position_id /home/hendrik/Projects/deno-dap/second_test.ts::secondTest
 
     -- Default result in case parsing fails
     results[position_id] = {
@@ -110,54 +80,81 @@ return function(build_specfication, result, tree)
         return results
     end
 
-    -- print(result.output) -- this returns a file path in the tmp dir
-    -- print(file_path) -- /home/hendrik/Projects/deno-dap/second_test.ts
-    -- print(position_id) --  /home/hendrik/Projects/deno-dap/second_test.ts::secondTest
     local position = tree:data()
-    local junit_reports = parse_xml_file(result.output)
 
-    --- Keep track of total number of tests that passed, failed, and were skipped.
     local status_counts = {
         passed = 0,
         failed = 0,
         skipped = 0,
     }
 
-    for _, junit_report in pairs(junit_reports) do
-        for _, test_suite_node in pairs(as_list(junit_report.testsuite)) do
-            for _, test_case_node in pairs(as_list(test_suite_node.testcase)) do
-                local matched_position = find_position_for_test_case(tree, test_case_node)
+    print(result.output)
+    -- Get the directory of the current file
+    local current_file = debug.getinfo(1, 'S').source:sub(2)
+    local current_dir = current_file:match '(.*/)'
+    local output = vim.fn.system('deno run --allow-read ' .. current_dir .. 'parse-deno-test-output.ts ' .. result.output)
 
-                if matched_position ~= nil then
-                    local failure_node = test_case_node.failure
-                    local status
+    local parsed_output = vim.fn.json_decode(output)
+    print(vim.inspect(parsed_output))
+    -- local raw_content = lib.files.read(result.output)
+    -- print(raw_content)
+    -- local content = strip_ansi(raw_content)
+    -- print(content)
+    -- print(vim.inspect(parse_content(content)))
 
-                    if failure_node == nil then
-                        status = 'passed'
-                        status_counts.passed = status_counts.passed + 1
-                    else
-                        status = 'failed'
-                        status_counts.failed = status_counts.failed + 1
-                    end
+    -- example content
+    -- secondTest ...
+    ------- output -------
+    -- custom log
+    -- custom log 1
+    -- ----- output end -----
+    -- secondTest ... FAILED (1ms)
+    -- secondXTest ...
+    -- ------- output -------
+    -- x x x
+    -- ----- output end -----
+    -- secondXTest ... ok (0ms)
+    -- secondYTest ... ignored (0ms)
 
-                    local short_message = (failure_node or {}).message
-                    local error = failure_node and parse_error_from_failure_xml(failure_node, position)
-                    local result = { status = status, short = short_message, errors = { error } }
-                    results[matched_position.id] = result
-                end
-            end
-        end
-    end
+    -- local junit_reports = parse_xml_file(result.output)
 
-    -- Notify the user with the summary of test results
-    local summary_message = string.format(
-        'Test Results: %d passed, %d failed, %d skipped',
-        status_counts.passed,
-        status_counts.failed,
-        status_counts.skipped
-    )
-    local log_level = status_counts.failed > 0 and vim.log.levels.ERROR or vim.log.levels.INFO
-    vim.notify(summary_message, log_level)
+    --- Keep track of total number of tests that passed, failed, and were skipped.
+    --
+    -- for _, junit_report in pairs(junit_reports) do
+    --     for _, test_suite_node in pairs(as_list(junit_report.testsuite)) do
+    --         for _, test_case_node in pairs(as_list(test_suite_node.testcase)) do
+    --             local matched_position = find_position_for_test_case(tree, test_case_node)
+    --
+    --             if matched_position ~= nil then
+    --                 local failure_node = test_case_node.failure
+    --                 local status
+    --
+    --                 if failure_node == nil then
+    --                     status = 'passed'
+    --                     status_counts.passed = status_counts.passed + 1
+    --                 else
+    --                     status = 'failed'
+    --                     status_counts.failed = status_counts.failed + 1
+    --                 end
+    --
+    --                 local short_message = (failure_node or {}).message
+    --                 local error = failure_node and parse_error_from_failure_xml(failure_node, position)
+    --                 local result = { status = status, short = short_message, errors = { error } }
+    --                 results[matched_position.id] = result
+    --             end
+    --         end
+    --     end
+    -- end
+    --
+    -- -- Notify the user with the summary of test results
+    -- local summary_message = string.format(
+    --     'Test Results: %d passed, %d failed, %d skipped',
+    --     status_counts.passed,
+    --     status_counts.failed,
+    --     status_counts.skipped
+    -- )
+    -- local log_level = status_counts.failed > 0 and vim.log.levels.ERROR or vim.log.levels.INFO
+    -- vim.notify(summary_message, log_level)
 
     return results
 end
