@@ -79,10 +79,10 @@ end, { desc = 'Cargo check' })
 
 -- Avante
 map({ 'n', 'v' }, '<leader>ax', function()
-    vim.cmd('AvanteClear')
+    vim.cmd 'AvanteClear'
     -- Wait for 100ms before asking
     vim.defer_fn(function()
-        vim.cmd('AvanteAsk')
+        vim.cmd 'AvanteAsk'
     end, 100)
 end, { desc = 'Avante Clear and Ask' })
 
@@ -141,9 +141,9 @@ map('n', '<leader>ut', '<cmd> UndotreeToggle <CR>', { desc = 'Undotree Toggle' }
 map('n', '<leader>ur', '<cmd> UndotreeFocus <CR>', { desc = 'Undotree Focus' })
 
 -- NEOTEST
-map('n', '<leader>nt', ' "<cmd> Neotest summary toggle <CR>"', { desc = 'Neotest Toggle' })
-map('n', '<leader>na', ' "<cmd> Neotest attach <CR>"', { desc = 'Neotest attach logs' })
-map('n', '<leader>nr', ' "<cmd> Neotest run <CR>"', { desc = 'Neotest run closest' })
+map('n', '<leader>nt', '<cmd> Neotest summary toggle <CR>', { desc = 'Neotest Toggle' })
+map('n', '<leader>na', '<cmd> Neotest attach <CR>', { desc = 'Neotest attach logs' })
+map('n', '<leader>nr', '<cmd> Neotest run <CR>', { desc = 'Neotest run closest' })
 map(
     'n',
     '<leader>ndr',
