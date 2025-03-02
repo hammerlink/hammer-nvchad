@@ -41,19 +41,6 @@ local function find_position_for_test_case(tree, test_case_node)
     end
 end
 
-local strip_ansi = function(str)
-    if not str then
-        return nil
-    end
-    -- Pattern to match ANSI escape sequences
-    local pattern = '\27%[[^m]*m'
-    -- Replace all ANSI sequences with empty string
-    local result = string.gsub(str, pattern, '')
-    -- Also remove carriage returns
-    result = string.gsub(result, '\r', '')
-    return result
-end
-
 --- See Neotest adapter specification.
 ---
 --- This builds a list of test run results. Therefore it parses all JUnit report
@@ -103,7 +90,7 @@ return function(build_specfication, result, tree)
     if parsed_output and parsed_output.tests then
         for test_name, test_data in pairs(parsed_output.tests) do
             if test_name == position.name then
-                local status = 'ignored'
+                local status = 'skipped'
                 if test_data.type == 'ok' then
                     status = 'passed'
                 elseif test_data.type == 'failed' then

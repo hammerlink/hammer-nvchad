@@ -18,6 +18,8 @@ interface TestData {
     logs?: string;
     type: TestType;
     durationMs?: number;
+    errorLines?: string[];
+    error?: string;
 }
 interface TestMap {
     [name: string]: TestData;
@@ -48,8 +50,16 @@ try {
 }
 
 function parseTestOutput(text: string) {
+    // Test variables
     const lines = text.split('\n');
     let logLines: string[] | null = null;
+    let current: TestData | null = null;
+
+    // Error variables
+    let isErrorMode = false;
+    let errorLines: string[] | null = null;
+
+    // line engine
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const testNameLine = isTestNameLine(line);
@@ -57,18 +67,29 @@ function parseTestOutput(text: string) {
             const { type, testName, durationMs } = testNameLine;
             if (type === 'begin') {
                 TestMap[testName] = { logLines: [], type: 'begin' };
-                logLines = TestMap[testName].logLines!;
+                current = TestMap[testName];
             } else {
+                // reset
                 logLines = null;
+                current = null;
+
                 const originalMap = TestMap[testName] || {};
                 TestMap[testName] = {
                     ...originalMap,
                     type: testNameLine.type,
                     durationMs,
                     logs: originalMap.logLines?.join('\n'),
+                    error: originalMap.errorLines?.join('\n'),
                 };
             }
-        } else if (logLines) logLines.push(line);
+        } else if (line.includes('ERRORS')) {
+            isErrorMode = true;
+        } else if (isErrorMode) {
+            const testNames = Object.keys(TestMap);
+            // TODO CONTINUE HERE
+        } else if (line.includes('------- output -------')) logLines = current?.logLines || null;
+        else if (line.includes('----- output end -----')) logLines = null;
+        else if (logLines) logLines?.push(line);
     }
 }
 
