@@ -8,31 +8,66 @@ if (args.length === 0) {
     console.log('No arguments provided. Please provide an argument.');
     Deno.exit(1);
 }
-const text = await Deno.readTextFile(args[0]);
-const TestMap = {}; // TODO
+let text = await Deno.readTextFile(args[0]);
+// Cleanse ISO control characters from the text
+text = text.replace(ansiRegex(), '').replace(/\r\n/g, '\n');
+
+type TestType = 'begin' | 'ignored' | 'failed' | 'ok';
+interface TestData {
+    logLines: string[];
+    type: TestType;
+    durationMs?: number;
+}
+interface TestMap {
+    [name: string]: TestData;
+}
+
+interface TestOutput {
+    tests: TestMap;
+    isSuccess: boolean;
+    durationMs: number;
+    text: string;
+}
+
+const TestMap: TestMap = {};
+
 try {
-    const lines = text.split('\n');
-    const output = { success: true, lines: lines.length };
+    parseTestOutput(text);
+    const isSuccess = !Object.values(TestMap).some((test) => test.type === 'failed');
+    const totalDurationMs = Object.values(TestMap).reduce((acc, test) => acc + (test.durationMs || 0), 0);
+    const output: TestOutput = {
+        tests: TestMap,
+        isSuccess,
+        durationMs: totalDurationMs,
+        text,
+    };
     console.log(JSON.stringify(output, null, 2));
 } catch (error) {
     console.log(JSON.stringify({ success: false, error: 'failed_to_parse' }, null, 2));
 }
 
-function parseTestOutput(text: string): { success: boolean; lines: number } {
+function parseTestOutput(text: string) {
     const lines = text.split('\n');
+    let logLines: string[] | null = null;
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const testNameLine = isTestNameLine(line);
         if (testNameLine) {
-            console.log(testNameLine);
-        }
+            const { type, testName, durationMs } = testNameLine;
+            if (type === 'begin') {
+                TestMap[testName] = { logLines: [], type: 'begin' };
+                logLines = TestMap[testName].logLines;
+            } else {
+                logLines = null;
+                TestMap[testName] = { ...(TestMap[testName] || {}), type: testNameLine.type, durationMs };
+            }
+        } else if (logLines) logLines.push(line);
     }
-    return { success: true, lines: lines.length };
 }
 
 function isTestNameLine(
     line: string,
-): { type: 'begin' | 'ignored' | 'failed' | 'ok'; durationMs: number; testName: string } | null {
+): { type: TestType; durationMs: number; testName: string } | null {
     // example begin ignored: secondYTest ... ignored (0ms)
     // example begin failure/ok: secondTest ...
     // example end failure: secondTest ... FAILED (1ms)
@@ -63,4 +98,15 @@ function isTestNameLine(
     }
 
     return null;
+}
+
+export default function ansiRegex({ onlyFirst = false } = {}) {
+    // Valid string terminator sequences are BEL, ESC\, and 0x9c
+    const ST = '(?:\\u0007|\\u001B\\u005C|\\u009C)';
+    const pattern = [
+        `[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?${ST})`,
+        '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))',
+    ].join('|');
+
+    return new RegExp(pattern, onlyFirst ? undefined : 'g');
 }
