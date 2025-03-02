@@ -14,7 +14,8 @@ text = text.replace(ansiRegex(), '').replace(/\r\n/g, '\n');
 
 type TestType = 'begin' | 'ignored' | 'failed' | 'ok';
 interface TestData {
-    logLines: string[];
+    logLines?: string[];
+    logs?: string;
     type: TestType;
     durationMs?: number;
 }
@@ -56,10 +57,16 @@ function parseTestOutput(text: string) {
             const { type, testName, durationMs } = testNameLine;
             if (type === 'begin') {
                 TestMap[testName] = { logLines: [], type: 'begin' };
-                logLines = TestMap[testName].logLines;
+                logLines = TestMap[testName].logLines!;
             } else {
                 logLines = null;
-                TestMap[testName] = { ...(TestMap[testName] || {}), type: testNameLine.type, durationMs };
+                const originalMap = TestMap[testName] || {};
+                TestMap[testName] = {
+                    ...originalMap,
+                    type: testNameLine.type,
+                    durationMs,
+                    logs: originalMap.logLines?.join('\n'),
+                };
             }
         } else if (logLines) logLines.push(line);
     }

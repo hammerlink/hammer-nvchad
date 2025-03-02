@@ -81,6 +81,7 @@ return function(build_specfication, result, tree)
     end
 
     local position = tree:data()
+    print(vim.inspect(position))
 
     local status_counts = {
         passed = 0,
@@ -95,28 +96,41 @@ return function(build_specfication, result, tree)
     local output = vim.fn.system('deno run --allow-read ' .. current_dir .. 'parse-deno-test-output.ts ' .. result.output)
 
     local parsed_output = vim.fn.json_decode(output)
+    
+
+
     print(vim.inspect(parsed_output))
-    -- local raw_content = lib.files.read(result.output)
-    -- print(raw_content)
-    -- local content = strip_ansi(raw_content)
-    -- print(content)
-    -- print(vim.inspect(parse_content(content)))
+    if parsed_output and parsed_output.tests then
+        for test_name, test_data in pairs(parsed_output.tests) do
+            if test_name == position.name then
+                local status = 'ignored'
+                if test_data.type == 'ok' then
+                    status = 'passed'
+                elseif test_data.type == 'failed' then
+                    status = 'failed'
+                end
+                local short_message = test_data.logs
+                local error = test_data.error
+                local result = { status = status, short = short_message, errors = { error } }
+                results[position_id] = result
+            end
+            -- print(test_name)
+            -- print(vim.inspect(test_data))
 
-    -- example content
-    -- secondTest ...
-    ------- output -------
-    -- custom log
-    -- custom log 1
-    -- ----- output end -----
-    -- secondTest ... FAILED (1ms)
-    -- secondXTest ...
-    -- ------- output -------
-    -- x x x
-    -- ----- output end -----
-    -- secondXTest ... ok (0ms)
-    -- secondYTest ... ignored (0ms)
+            -- local matched_position = tree:find(function(position)
+            --     return position.name == test_name
+            -- end)
+            --
+            -- if matched_position then
+            --     local status = test_data.status
+            --     local short_message = test_data.message
+            --     local error = test_data.error
+            --     local result = { status = status, short = short_message, errors = { error } }
+            --     results[matched_position.id] = result
+            -- end
+        end
+    end
 
-    -- local junit_reports = parse_xml_file(result.output)
 
     --- Keep track of total number of tests that passed, failed, and were skipped.
     --
