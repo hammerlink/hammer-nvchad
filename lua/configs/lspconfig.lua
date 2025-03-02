@@ -4,15 +4,10 @@ local utils = require 'utils'
 
 local lspconfig = require 'lspconfig'
 
--- Define a function to check if a Deno project is detected
-local function is_deno_project()
-    return lspconfig.util.root_pattern('deno.json', 'deno.jsonc')(vim.fn.getcwd()) ~= nil
-end
-
 local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'vuels' }
 if utils.is_deno then
     table.insert(servers, 'denols')
-    vim.notify('Deno project detected: Using denols language server', vim.log.levels.INFO)
+    print('Using Deno language server (denols)')
 else
     table.insert(servers, 'ts_ls')
     print 'Using TypeScript language server (ts_ls)'
