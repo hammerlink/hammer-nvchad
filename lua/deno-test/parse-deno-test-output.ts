@@ -28,7 +28,7 @@ interface TestMap {
 
 interface TestOutput {
     tests: TestMap;
-    isSuccess: boolean;
+    type: TestType;
     durationMs: number;
     text: string;
 }
@@ -37,11 +37,12 @@ const TestMap: TestMap = {};
 
 try {
     parseTestOutput(text);
-    const isSuccess = !Object.values(TestMap).some((test) => test.type === 'failed');
+    const hasFailures = Object.values(TestMap).some((test) => test.type === 'failed');
+    const hasSuccess = Object.values(TestMap).some((test) => test.type === 'ok');
     const totalDurationMs = Object.values(TestMap).reduce((acc, test) => acc + (test.durationMs || 0), 0);
     const output: TestOutput = {
         tests: TestMap,
-        isSuccess,
+        type: hasFailures ? 'failed' : (hasSuccess ? 'ok' : 'ignored'),
         durationMs: totalDurationMs,
         text,
     };
@@ -95,7 +96,7 @@ function parseTestOutput(text: string) {
                 const { testName, line: errorLine } = testErrorLine;
                 const originalMap = TestMap[testName] || {};
                 TestMap[testName] = {
-                    ...(originalMap),
+                    ...originalMap,
                     errorLines: [...(originalMap.errorLines || []), errorLine],
                     testError: testErrorLine,
                 };
@@ -108,7 +109,7 @@ function parseTestOutput(text: string) {
                 // store the error logs
                 const originalMap = TestMap[testErrorLine.testName] || {};
                 TestMap[testErrorLine.testName] = {
-                    ...(originalMap),
+                    ...originalMap,
                     error: originalMap.errorLines?.join('\n'),
                 };
             } else if (currentTestErrorLine) {
@@ -168,14 +169,13 @@ function isTestErrorLine(line: string, testNames: string[]): TestErrorLine | nul
         const regex = new RegExp(`^${testName} => ([^:]+):(\d+):(\d+)$`);
         const match = line.match(regex);
         if (!match) continue;
-        
+
         return {
             testName,
             lineNumber: parseInt(match[2], 10),
             columnNumber: parseInt(match[3], 10),
             line,
         };
-
     }
     return null;
 }

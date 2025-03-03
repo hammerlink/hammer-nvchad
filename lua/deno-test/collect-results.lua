@@ -35,6 +35,7 @@ return function(build_specfication, result, tree)
         vim.fn.system('deno run --allow-read ' .. current_dir .. 'parse-deno-test-output.ts ' .. result.output)
 
     local parsed_output = vim.fn.json_decode(output)
+    print(vim.inspect(parsed_output))
 
     if parsed_output and parsed_output.tests then
         for test_name, test_data in pairs(parsed_output.tests) do
@@ -47,15 +48,29 @@ return function(build_specfication, result, tree)
                 end
                 -- local short_message = test_data.error test_data.logs
                 local error = test_data.error
-                local result = { status = status, errors = { error } }
+                local test_result = { status = status, errors = { error } }
                 local test_position_id = position_id
                 if not is_test then
                     test_position_id = position.path .. '::' .. test_name
                 end
-                results[test_position_id] = result
+                results[test_position_id] = test_result
             end
         end
     end
+    if is_file then
+        local status = 'skipped'
+        if parsed_output.type == 'ok' then
+            status = 'passed'
+        elseif parsed_output.type == 'failed' then
+            status = 'failed'
+        end
+
+        results[position_id] = {
+            status = status,
+        }
+    end
+
+    print(vim.inspect(results))
 
     return results
 end
