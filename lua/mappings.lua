@@ -144,6 +144,7 @@ map('n', '<leader>ur', '<cmd> UndotreeFocus <CR>', { desc = 'Undotree Focus' })
 map('n', '<leader>nt', '<cmd> Neotest summary toggle <CR>', { desc = 'Neotest Toggle' })
 map('n', '<leader>na', '<cmd> Neotest attach <CR>', { desc = 'Neotest attach logs' })
 map('n', '<leader>nr', '<cmd> Neotest run <CR>', { desc = 'Neotest run closest' })
+map('n', '<leader>no', '<cmd> Neotest output <CR>', { desc = 'Neotest run closest' })
 map(
     'n',
     '<leader>ndr',
