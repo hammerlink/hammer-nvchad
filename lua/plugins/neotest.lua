@@ -29,6 +29,7 @@ local M = {
         'antoinemadec/FixCursorHold.nvim',
         'nvim-treesitter/nvim-treesitter',
         'marilari88/neotest-vitest',
+        'hammerlink/neotest-deno'
         -- 'alfaix/neotest-gtest',
         -- 'rouge8/neotest-rust',
     },
@@ -47,13 +48,7 @@ local M = {
                     end,
                 },
 
-                require 'deno-test' {},
-
-                -- require('neotest-gtest').setup {
-                --     -- Optional config
-                --     root_pattern = 'CMakeLists.txt', -- Pattern to find project root
-                --     executable_pattern = 'build/*', -- Pattern to find executables
-                -- },
+                require 'neotest-deno' {},
             },
         }
     end,
