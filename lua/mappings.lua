@@ -78,6 +78,7 @@ map('n', '<leader>lR', function()
 end, { desc = 'Cargo check' })
 
 -- Avante
+map('v', '<leader>av', '<cmd> AvanteToggle <CR>', { desc = 'Avante Toggle' })
 map({ 'n', 'v' }, '<leader>ax', function()
     vim.cmd 'AvanteClear'
     -- Wait for 100ms before asking
@@ -144,14 +145,13 @@ map('n', '<leader>ur', '<cmd> UndotreeFocus <CR>', { desc = 'Undotree Focus' })
 map('n', '<leader>nt', '<cmd> Neotest summary toggle <CR>', { desc = 'Neotest Toggle' })
 map('n', '<leader>na', '<cmd> Neotest attach <CR>', { desc = 'Neotest attach logs' })
 map('n', '<leader>nr', '<cmd> Neotest run <CR>', { desc = 'Neotest run closest' })
-map('n', '<leader>no', '<cmd> Neotest output <CR>', { desc = 'Neotest run closest' })
 map(
     'n',
     '<leader>ndr',
     ' "<cmd> lua require("neotest").run.run({strategy = "dap"}) <CR>"',
     { desc = 'Neotest debug closest' }
 )
-map('n', '<leader>no', ' "<cmd> Neotest output <CR>"', { desc = 'Neotest output' })
+map({ 'n', 'v' }, '<leader>no', '<cmd> Neotest output <CR>', { desc = 'Neotest output' })
 
 -- Print file path
 map('n', '<leader>fp', function()
