@@ -15,6 +15,9 @@ local options = {
         typescriptreact = function()
             return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
         end,  -- for .tsx files
+        json = function()
+            return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
+        end,  -- for .tsx files
         vue = { 'prettier' },
         c = { 'clang_format' },
         cpp = { 'clang_format' },
