@@ -159,5 +159,53 @@ map('n', '<leader>fp', function()
     print(path)
 end, { desc = 'Print file absolute path' })
 
+-- DAP
+-- DAP F KEYS
+map({ 'n', 'v' }, '<F5>', function()
+    require('dap').continue()
+end, { desc = 'Debug: Continue' })
+map({ 'n', 'v' }, '<F10>', function()
+    require('dap').step_over()
+end, { desc = 'Debug: Step Over' })
+map({ 'n', 'v' }, '<F11>', function()
+    require('dap').step_into()
+end, { desc = 'Debug: Step Into' })
+map({ 'n', 'v' }, '<F12>', function()
+    require('dap').step_out()
+end, { desc = 'Debug: Step Out' })
+-- DAP CONTROL
+map('n', '<leader>db', function()
+    require('dap').toggle_breakpoint()
+end, { desc = 'Debug: Toggle Breakpoint' })
+map('n', '<leader>dB', function()
+    require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+end, { desc = 'Debug: Set Conditional Breakpoint' })
+map('n', '<leader>dl', function()
+    require('dap').run_last()
+end, { desc = 'Debug: Run Last' })
+map('n', '<leader>dt', function()
+    -- Check if dapui is visible before toggling
+    local dapui_visible = false
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local buf_name = vim.api.nvim_buf_get_name(buf)
+        if buf_name:match("dap%-") then
+            dapui_visible = true
+            break
+        end
+    end
+
+    -- If dapui is not visible and we're about to open it, close NvimTree
+    if not dapui_visible then
+        -- Close NvimTree if it's open
+        local nvim_tree = require('nvim-tree.api')
+        if nvim_tree.tree.is_visible() then
+            nvim_tree.tree.close()
+        end
+    end
+
+    require('dapui').toggle()
+end, { desc = 'Toggle Debug UI' })
+
 -- Disable mappings
 local nomap = vim.keymap.del

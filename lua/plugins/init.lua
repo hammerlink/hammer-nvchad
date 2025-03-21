@@ -8,6 +8,7 @@ local copilot_plugin = require 'plugins.copilot'
 local diffview_plugin = require 'plugins.diffview'
 local neotest_plugin = require 'plugins.neotest'
 local notify_plugin = require 'plugins.notify'
+local dap_plugin = require 'plugins.dap'
 
 return {
     {
@@ -62,4 +63,5 @@ return {
     overseer_plugin,
     copilot_plugin,
     neotest_plugin,
+    dap_plugin,
 }
