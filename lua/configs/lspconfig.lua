@@ -7,7 +7,7 @@ local lspconfig = require 'lspconfig'
 local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'vuels' }
 if utils.is_deno then
     table.insert(servers, 'denols')
-    print('Using Deno language server (denols)')
+    print 'Using Deno language server (denols)'
 else
     table.insert(servers, 'ts_ls')
     print 'Using TypeScript language server (ts_ls)'
@@ -87,9 +87,3 @@ for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup(config)
 end
 
--- configuring single server, example: typescript
--- lspconfig.ts_ls.setup {
---   on_attach = nvlsp.on_attach,
---   on_init = nvlsp.on_init,
---   capabilities = nvlsp.capabilities,
--- }
