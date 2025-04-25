@@ -4,7 +4,7 @@ local utils = require 'utils'
 
 local lspconfig = require 'lspconfig'
 
-local servers = { 'html', 'cssls', 'clangd', 'rust_analyzer', 'vuels' }
+local servers = { 'html', 'cssls', 'clangd', 'vuels' } --, 'rust_analyzer'
 if utils.is_deno then
     table.insert(servers, 'denols')
     print 'Using Deno language server (denols)'
@@ -60,22 +60,31 @@ for _, lsp in ipairs(servers) do
     }
 
     -- Special configuration for rust-analyzer
-    if lsp == 'rust_analyzer' then
-        config.settings = {
-            ['rust-analyzer'] = {
-                checkOnSave = {
-                    command = 'clippy',
-                },
-                diagnostics = {
-                    enable = true,
-                    experimental = {
-                        enable = true,
-                    },
-                },
-            },
-        }
+    -- if lsp == 'rust_analyzer' then
+    --     config.settings = {
+    --         ['rust-analyzer'] = {
+    --             checkOnSave = {
+    --                 command = 'check',
+    --                 enable = true,
+    --             },
+    --             cargo = {
+    --                 loadOutDirsFromCheck = true,
+    --             },
+    --             procMacro = {
+    --                 enable = true,
+    --             },
+    --             diagnostics = {
+    --                 enable = true,
+    --                 experimental = {
+    --                     enable = true,
+    --                 },
+    --             },
+    --         },
+    --     }
+    -- end
     -- Special configuration for deno
-    elseif lsp == 'denols' then
+    
+     if lsp == 'denols' then
         config.root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc')
         config.init_options = {
             enable = true,

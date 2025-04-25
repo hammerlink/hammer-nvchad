@@ -29,18 +29,18 @@ local M = {
         'antoinemadec/FixCursorHold.nvim',
         'nvim-treesitter/nvim-treesitter',
         'marilari88/neotest-vitest',
-        'hammerlink/neotest-deno'
+        'hammerlink/neotest-deno',
         -- 'alfaix/neotest-gtest',
-        -- 'rouge8/neotest-rust',
+        'rouge8/neotest-rust',
     },
     cmd = 'Neotest',
     config = function()
         require('neotest').setup {
             adapters = {
-                -- require 'neotest-rust' {
-                --     args = { '--no-capture' },
-                --     dap_adapter = 'codelldb', -- LLDB MISSING!!
-                -- },
+                require 'neotest-rust' {
+                    args = { '--no-capture' },
+                    dap_adapter = 'codelldb', -- LLDB MISSING!!
+                },
                 require 'neotest-vitest' {
                     cwd = function(path)
                         local closest_dir = find_closest_package_json_dir(path, vim.fn.getcwd())

@@ -76,6 +76,10 @@ map('n', 'gr', '<cmd> Telescope lsp_references <cr>', { desc = 'LSP references' 
 map('n', '<leader>lR', function()
     cargo_check.CargoQuickfix()
 end, { desc = 'Cargo check' })
+map({ 'n', 'v' }, '<leader>ca', function()
+    vim.cmd.RustLsp 'codeAction' -- supports rust-analyzer's grouping
+    -- or vim.lsp.buf.codeAction() if you don't want grouping.
+end, { desc = 'code action' })
 
 -- Avante
 map('v', '<leader>av', '<cmd> AvanteToggle <CR>', { desc = 'Avante Toggle' })
@@ -189,7 +193,7 @@ map('n', '<leader>dt', function()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
         local buf = vim.api.nvim_win_get_buf(win)
         local buf_name = vim.api.nvim_buf_get_name(buf)
-        if buf_name:match("dap%-") then
+        if buf_name:match 'dap%-' then
             dapui_visible = true
             break
         end
@@ -198,7 +202,7 @@ map('n', '<leader>dt', function()
     -- If dapui is not visible and we're about to open it, close NvimTree
     if not dapui_visible then
         -- Close NvimTree if it's open
-        local nvim_tree = require('nvim-tree.api')
+        local nvim_tree = require 'nvim-tree.api'
         if nvim_tree.tree.is_visible() then
             nvim_tree.tree.close()
         end
