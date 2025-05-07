@@ -1,4 +1,4 @@
-local utils = require 'utils';
+local utils = require 'utils'
 
 local options = {
     formatters_by_ft = {
@@ -8,20 +8,22 @@ local options = {
         end,
         javascriptreact = function()
             return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
-        end,  -- for .jsx files
+        end, -- for .jsx files
         typescript = function()
             return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
         end,
         typescriptreact = function()
             return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
-        end,  -- for .tsx files
+        end, -- for .tsx files
         json = function()
             return utils.is_deno and { 'deno_fmt' } or { 'prettier' }
-        end,  -- for .tsx files
+        end, -- for .tsx files
         vue = { 'prettier' },
         c = { 'clang_format' },
         cpp = { 'clang_format' },
         mdx = { 'prettier' },
+        svd = { 'prettier' },
+        sql = { 'pg_format' },
         -- css = { "prettier" },
         -- html = { "prettier" },
     },
@@ -46,6 +48,10 @@ local options = {
                 '--stdin-filepath',
                 '$FILENAME',
             },
+        },
+        pg_format = {
+            command = 'pg_format',
+            args = { '--inplace' },
         },
     },
 
