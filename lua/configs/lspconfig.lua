@@ -83,8 +83,8 @@ for _, lsp in ipairs(servers) do
     --     }
     -- end
     -- Special configuration for deno
-    
-     if lsp == 'denols' then
+
+    if lsp == 'denols' then
         config.root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc')
         config.init_options = {
             enable = true,
@@ -96,3 +96,10 @@ for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup(config)
 end
 
+-- Custom addition for ASM
+lspconfig.asm_lsp.setup {
+    filetypes = { 'asm', 's', 'S' },
+    root_dir = function(fname)
+        return lspconfig.util.find_git_ancestor(fname) or vim.fn.getcwd()
+    end,
+}
