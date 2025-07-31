@@ -11,6 +11,24 @@ map({ 't', 'v', 'n', 'i' }, '<A-c>', '<ESC>', { desc = 'custom escape' })
 map('i', 'fd', '<ESC>', { desc = 'custom escape' })
 map('n', '<leader>tx', '<cmd> tabclose <CR>', { desc = 'Tab close' })
 
+-- nvim-tree
+map('n', '<leader>ti', function()
+    local nvim_tree = require 'nvim-tree.api'
+    local count = vim.v.count ~= 0 and vim.v.count or 1
+    local relative = count > 1 and count or 5
+    nvim_tree.tree.resize { relative = relative }
+end, { desc = 'Tree increase width' })
+map('n', '<leader>td', function()
+    local nvim_tree = require 'nvim-tree.api'
+    local count = vim.v.count ~= 0 and vim.v.count or 1
+    local relative = count > 1 and count or 5
+    nvim_tree.tree.resize { relative = -relative }
+end, { desc = 'Tree decrease width' })
+map('n', '<leader>tr', function()
+    local nvim_tree = require 'nvim-tree.api'
+    nvim_tree.tree.resize { width = 30}
+end, { desc = 'Tree width default' })
+
 -- neogit
 map('n', '<leader>gg', '<cmd> Neogit <cr>', { desc = 'Open NeoGit' })
 -- diffview
