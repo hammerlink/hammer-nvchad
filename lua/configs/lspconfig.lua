@@ -2,9 +2,7 @@
 require('nvchad.configs.lspconfig').defaults()
 local utils = require 'utils'
 
-local lspconfig = require 'lspconfig'
-
-local servers = { 'html', 'cssls', 'clangd', 'vuels' } --, 'rust_analyzer'
+local servers = { 'html', 'cssls', 'clangd', 'vuels', 'perlls' } --, 'rust_analyzer'
 if utils.is_deno then
     table.insert(servers, 'denols')
     print 'Using Deno language server (denols)'
@@ -59,47 +57,19 @@ for _, lsp in ipairs(servers) do
         capabilities = nvlsp.capabilities,
     }
 
-    -- Special configuration for rust-analyzer
-    -- if lsp == 'rust_analyzer' then
-    --     config.settings = {
-    --         ['rust-analyzer'] = {
-    --             checkOnSave = {
-    --                 command = 'check',
-    --                 enable = true,
-    --             },
-    --             cargo = {
-    --                 loadOutDirsFromCheck = true,
-    --             },
-    --             procMacro = {
-    --                 enable = true,
-    --             },
-    --             diagnostics = {
-    --                 enable = true,
-    --                 experimental = {
-    --                     enable = true,
-    --                 },
-    --             },
-    --         },
-    --     }
-    -- end
-    -- Special configuration for deno
-
     if lsp == 'denols' then
-        config.root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc')
-        config.init_options = {
-            enable = true,
-            lint = true,
-            unstable = false,
-        }
+        vim.lsp.config('denols', {
+            root_markers = { 'deno.json', 'deno.jsonc' },
+            init_options = {
+                enable = true,
+                lint = true,
+                unstable = false,
+            },
+        })
+    else
+        vim.lsp.config(lsp, config);
     end
 
-    lspconfig[lsp].setup(config)
+    vim.lsp.enable(lsp)
 end
 
--- Custom addition for ASM
-lspconfig.asm_lsp.setup {
-    filetypes = { 'asm', 's', 'S' },
-    root_dir = function(fname)
-        return lspconfig.util.find_git_ancestor(fname) or vim.fn.getcwd()
-    end,
-}
