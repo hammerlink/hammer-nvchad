@@ -9,6 +9,7 @@ local M = {
         -- Configure notify to avoid background warning
 
         require('neogit').setup {
+            commit_order = "",
             integrations = {
                 diffview = true,
             },
