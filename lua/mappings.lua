@@ -86,3 +86,17 @@ map(
     { desc = 'Neotest debug closest' }
 )
 map({ 'n', 'v' }, '<leader>no', '<cmd> Neotest output <CR>', { desc = 'Neotest output' })
+
+---------------------------------- Tabbufline ----------------------------------
+map('n', '<A-l>', function()
+    require('nvchad.tabufline').next()
+end, { desc = 'buffer goto next' })
+
+map('n', '<A-h>', function()
+    require('nvchad.tabufline').prev()
+end, { desc = 'buffer goto prev' })
+
+---------------------------------- Terminal ----------------------------------
+map({ 'n', 't' }, '<A-s>', function()
+    require('nvchad.term').toggle { pos = 'sp', id = 'htoggleTerm' }
+end, { desc = 'terminal toggleable horizontal term' })
