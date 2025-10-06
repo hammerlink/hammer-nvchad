@@ -55,3 +55,21 @@ map("n", "<leader>ff", function()
     end
     require("telescope.builtin").find_files { cwd = search_dir }
 end, { desc = "Find files" })
+
+---------------------------------- LSP ----------------------------------
+map('n', '<leader>li', '<cmd> LspInfo <cr>', { desc = 'LSP Info' })
+map('n', '<leader>lr', '<cmd> LspRestart <cr>', { desc = 'LSP Restart' })
+map('n', '<leader>lf', function()
+    vim.diagnostic.open_float { border = 'rounded' }
+end, { desc = 'LSP Restart' })
+map('n', 'gd', function()
+    require('telescope.builtin').lsp_definitions()
+end, { desc = 'LSP Definition' })
+map('n', 'gr', '<cmd> Telescope lsp_references <cr>', { desc = 'LSP references' })
+map('n', '<leader>lR', function()
+    cargo_check.CargoQuickfix()
+end, { desc = 'Cargo check' })
+map({ 'n', 'v' }, '<leader>ca', function()
+    vim.cmd.RustLsp 'codeAction' -- supports rust-analyzer's grouping
+    -- or vim.lsp.buf.codeAction() if you don't want grouping.
+end, { desc = 'code action' })
