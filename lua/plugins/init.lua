@@ -3,6 +3,7 @@ local notify_plugin = require "plugins.notify"
 local telescope_plugin = require 'plugins.telescope'
 
 return {
+    telescope_plugin,
     {
         "stevearc/conform.nvim",
         -- event = 'BufWritePre', -- uncomment for format on save
@@ -31,5 +32,4 @@ return {
     -- },
     notify_plugin,
     neogit_plugin,
-    telescope_plugin,
 }

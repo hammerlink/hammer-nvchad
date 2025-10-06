@@ -1,5 +1,10 @@
 return {
     "nvim-telescope/telescope.nvim",
+    dependencies = {
+        "nvim-lua/plenary.nvim",
+        "nvim-telescope/telescope-ui-select.nvim",
+    },
+    lazy = false,
     opts = function(_, conf)
         conf.defaults.mappings.i = {
             ["<C-j>"] = require("telescope.actions").move_selection_next,
@@ -23,6 +28,16 @@ return {
         conf.defaults.file_ignore_patterns = { "node_modules" }
         conf.defaults.generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter
 
+        conf.extensions = {
+            ["ui-select"] = require("telescope.themes").get_dropdown(),
+        }
+
         return conf
+    end,
+    config = function(_, opts)
+        local telescope = require "telescope"
+
+        telescope.setup(opts)
+        telescope.load_extension "ui-select"
     end,
 }
