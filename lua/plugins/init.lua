@@ -2,10 +2,11 @@ local neogit_plugin = require "plugins.neogit"
 local notify_plugin = require "plugins.notify"
 local telescope_plugin = require "plugins.telescope"
 local neotest_plugin = require "plugins.neotest"
-local diffview_plugin = require 'plugins.diffview'
+local diffview_plugin = require "plugins.diffview"
 
 return {
     telescope_plugin,
+    { "stevearc/dressing.nvim", lazy = false },
     {
         "stevearc/conform.nvim",
         -- event = 'BufWritePre', -- uncomment for format on save
@@ -38,6 +39,15 @@ return {
                 "c",
                 "markdown",
                 "vue",
+            },
+        },
+    },
+    {
+        "nvim-tree/nvim-tree.lua",
+        opts = {
+            filters = {
+                dotfiles = false,
+                git_ignored = false,
             },
         },
     },
