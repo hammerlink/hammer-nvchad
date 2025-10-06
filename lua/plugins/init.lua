@@ -2,6 +2,7 @@ local neogit_plugin = require "plugins.neogit"
 local notify_plugin = require "plugins.notify"
 local telescope_plugin = require "plugins.telescope"
 local neotest_plugin = require "plugins.neotest"
+local diffview_plugin = require 'plugins.diffview'
 
 return {
     telescope_plugin,
@@ -41,6 +42,7 @@ return {
         },
     },
     notify_plugin,
+    diffview_plugin,
     neogit_plugin,
     {
         "mrcjkb/rustaceanvim",
