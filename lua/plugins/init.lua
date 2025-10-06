@@ -1,3 +1,5 @@
+local neogit_plugin = require "plugins.neogit"
+
 return {
   {
     "stevearc/conform.nvim",
@@ -25,4 +27,5 @@ return {
   -- 		},
   -- 	},
   -- },
+  neogit_plugin,
 }
