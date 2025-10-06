@@ -1,5 +1,6 @@
 local neogit_plugin = require "plugins.neogit"
 local notify_plugin = require "plugins.notify"
+local telescope_plugin = require 'plugins.telescope'
 
 return {
     {
@@ -30,4 +31,5 @@ return {
     -- },
     notify_plugin,
     neogit_plugin,
+    telescope_plugin,
 }
