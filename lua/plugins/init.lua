@@ -2,32 +2,32 @@ local neogit_plugin = require "plugins.neogit"
 local notify_plugin = require "plugins.notify"
 
 return {
-  {
-    "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
-    opts = require "configs.conform",
-  },
+    {
+        "stevearc/conform.nvim",
+        -- event = 'BufWritePre', -- uncomment for format on save
+        opts = require "configs.conform",
+    },
 
-  -- These are some examples, uncomment them if you want to see them work!
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
-  },
+    -- These are some examples, uncomment them if you want to see them work!
+    {
+        "neovim/nvim-lspconfig",
+        config = function()
+            require "configs.lspconfig"
+        end,
+    },
 
-  -- test new blink
-  -- { import = "nvchad.blink.lazyspec" },
+    -- test new blink
+    -- { import = "nvchad.blink.lazyspec" },
 
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
-  notify_plugin,
-  neogit_plugin,
+    -- {
+    -- 	"nvim-treesitter/nvim-treesitter",
+    -- 	opts = {
+    -- 		ensure_installed = {
+    -- 			"vim", "lua", "vimdoc",
+    --      "html", "css"
+    -- 		},
+    -- 	},
+    -- },
+    notify_plugin,
+    neogit_plugin,
 }
