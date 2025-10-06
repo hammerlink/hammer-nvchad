@@ -100,3 +100,30 @@ end, { desc = 'buffer goto prev' })
 map({ 'n', 't' }, '<A-s>', function()
     require('nvchad.term').toggle { pos = 'sp', id = 'htoggleTerm' }
 end, { desc = 'terminal toggleable horizontal term' })
+
+---------------------------------- GitSigns ----------------------------------
+map('n', '<leader>rh', function()
+    require('gitsigns').reset_hunk()
+end, { desc = 'Reset hunk' })
+map('n', '<leader>ph', function()
+    require('gitsigns').preview_hunk()
+end, { desc = 'Preview hunk' })
+map('n', ']c', function()
+    if vim.wo.diff then
+        return ']c'
+    end
+    vim.schedule(function()
+        require('gitsigns').next_hunk()
+    end)
+    return '<Ignore>'
+end, { desc = 'Jump to next hunk', expr = true })
+
+map('n', '[c', function()
+    if vim.wo.diff then
+        return '[c'
+    end
+    vim.schedule(function()
+        require('gitsigns').prev_hunk()
+    end)
+    return '<Ignore>'
+end, { desc = 'Jump to previous hunk', expr = true })
