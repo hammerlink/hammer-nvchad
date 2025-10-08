@@ -2,12 +2,16 @@ require "nvchad.options"
 
 local opt = vim.opt
 
+-- Allow .nvim.lua / .exrc files in repos, do not allow shell usage
+vim.o.exrc = true
+vim.o.secure = true
+
 -- Indenting
 opt.expandtab = true
-opt.shiftwidth = 4
+-- opt.shiftwidth = 4
 opt.smartindent = true
-opt.tabstop = 4
-opt.softtabstop = 4
+-- opt.tabstop = 4
+-- opt.softtabstop = 4
 
 -- Numbers
 opt.number = true
