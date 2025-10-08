@@ -126,3 +126,6 @@ map('n', '[c', function()
     end)
     return '<Ignore>'
 end, { desc = 'Jump to previous hunk', expr = true })
+
+---------------------------------- Aerial ----------------------------------
+map('n', '<leader>at', '<cmd> AerialToggle <CR>', { desc = 'Aerial Toggle' })
