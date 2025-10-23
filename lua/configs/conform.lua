@@ -1,6 +1,12 @@
 local options = {
     formatters_by_ft = {
         lua = { "stylua" },
+        typescript = { "deno_fmt" },
+        typescriptreact = { "deno_fmt" },
+        javascript = { "deno_fmt" },
+        javascriptreact = { "deno_fmt" },
+        json = { "deno_fmt" },
+        markdown = { "deno_fmt" },
         -- css = { "prettier" },
         -- html = { "prettier" },
     },
