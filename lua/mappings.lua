@@ -100,6 +100,10 @@ map({ 'n', 't' }, '<A-s>', function()
     require('nvchad.term').toggle { pos = 'sp', id = 'htoggleTerm' }
 end, { desc = 'terminal toggleable horizontal term' })
 
+map({ "n", "t" }, "<A-v>", function()
+  require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm", size = 0.45 }
+end, { desc = "terminal toggleable vertical term" })
+
 ---------------------------------- GitSigns ----------------------------------
 map('n', '<leader>rh', function()
     require('gitsigns').reset_hunk()
