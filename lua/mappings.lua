@@ -75,66 +75,66 @@ end, { desc = "Telescope: type definitions" })
 map("n", "<leader>nx", '<cmd> lua require("notify").dismiss() <CR>', { desc = "Close all notifications" })
 
 ---------------------------------- NEOTEST ----------------------------------
-map('n', '<leader>nt', '<cmd> Neotest summary toggle <CR>', { desc = 'Neotest Toggle' })
-map('n', '<leader>na', '<cmd> Neotest attach <CR>', { desc = 'Neotest attach logs' })
-map('n', '<leader>nr', '<cmd> Neotest run <CR>', { desc = 'Neotest run closest' })
+map("n", "<leader>nt", "<cmd> Neotest summary toggle <CR>", { desc = "Neotest Toggle" })
+map("n", "<leader>na", "<cmd> Neotest attach <CR>", { desc = "Neotest attach logs" })
+map("n", "<leader>nr", "<cmd> Neotest run <CR>", { desc = "Neotest run closest" })
 map(
-    'n',
-    '<leader>ndr',
+    "n",
+    "<leader>ndr",
     ' "<cmd> lua require("neotest").run.run({strategy = "dap"}) <CR>"',
-    { desc = 'Neotest debug closest' }
+    { desc = "Neotest debug closest" }
 )
-map({ 'n', 'v' }, '<leader>no', '<cmd> Neotest output <CR>', { desc = 'Neotest output' })
+map({ "n", "v" }, "<leader>no", "<cmd> Neotest output <CR>", { desc = "Neotest output" })
 
 ---------------------------------- Tabbufline ----------------------------------
-map('n', '<A-l>', function()
-    require('nvchad.tabufline').next()
-end, { desc = 'buffer goto next' })
+map("n", "<A-l>", function()
+    require("nvchad.tabufline").next()
+end, { desc = "buffer goto next" })
 
-map('n', '<A-h>', function()
-    require('nvchad.tabufline').prev()
-end, { desc = 'buffer goto prev' })
+map("n", "<A-h>", function()
+    require("nvchad.tabufline").prev()
+end, { desc = "buffer goto prev" })
 
 ---------------------------------- Terminal ----------------------------------
-map({ 'n', 't' }, '<A-s>', function()
-    require('nvchad.term').toggle { pos = 'sp', id = 'htoggleTerm' }
-end, { desc = 'terminal toggleable horizontal term' })
+map({ "n", "t" }, "<A-s>", function()
+    require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
+end, { desc = "terminal toggleable horizontal term" })
 
 map({ "n", "t" }, "<A-v>", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm", size = 0.45 }
+    require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm", size = 0.45 }
 end, { desc = "terminal toggleable vertical term" })
 
 ---------------------------------- GitSigns ----------------------------------
-map('n', '<leader>rh', function()
-    require('gitsigns').reset_hunk()
-end, { desc = 'Reset hunk' })
-map('n', '<leader>ph', function()
-    require('gitsigns').preview_hunk()
-end, { desc = 'Preview hunk' })
-map('n', ']c', function()
+map("n", "<leader>rh", function()
+    require("gitsigns").reset_hunk()
+end, { desc = "Reset hunk" })
+map("n", "<leader>ph", function()
+    require("gitsigns").preview_hunk()
+end, { desc = "Preview hunk" })
+map("n", "]c", function()
     if vim.wo.diff then
-        return ']c'
+        return "]c"
     end
     vim.schedule(function()
-        require('gitsigns').next_hunk()
+        require("gitsigns").next_hunk()
     end)
-    return '<Ignore>'
-end, { desc = 'Jump to next hunk', expr = true })
+    return "<Ignore>"
+end, { desc = "Jump to next hunk", expr = true })
 
-map('n', '[c', function()
+map("n", "[c", function()
     if vim.wo.diff then
-        return '[c'
+        return "[c"
     end
     vim.schedule(function()
-        require('gitsigns').prev_hunk()
+        require("gitsigns").prev_hunk()
     end)
-    return '<Ignore>'
-end, { desc = 'Jump to previous hunk', expr = true })
+    return "<Ignore>"
+end, { desc = "Jump to previous hunk", expr = true })
 
-vim.keymap.set('n', '<leader>gb', function()
-  local gs = require('gitsigns')
-  gs.blame_line({ full = true })
-end, { desc = 'Show full Git blame info in a floating window' })
+vim.keymap.set("n", "<leader>gb", function()
+    local gs = require "gitsigns"
+    gs.blame_line { full = true }
+end, { desc = "Show full Git blame info in a floating window" })
 
 ---------------------------------- Aerial ----------------------------------
-map('n', '<leader>at', '<cmd> AerialToggle <CR>', { desc = 'Aerial Toggle' })
+map("n", "<leader>at", "<cmd> AerialToggle <CR>", { desc = "Aerial Toggle" })
