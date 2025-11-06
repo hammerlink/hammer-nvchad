@@ -131,5 +131,10 @@ map('n', '[c', function()
     return '<Ignore>'
 end, { desc = 'Jump to previous hunk', expr = true })
 
+vim.keymap.set('n', '<leader>gb', function()
+  local gs = require('gitsigns')
+  gs.blame_line({ full = true })
+end, { desc = 'Show full Git blame info in a floating window' })
+
 ---------------------------------- Aerial ----------------------------------
 map('n', '<leader>at', '<cmd> AerialToggle <CR>', { desc = 'Aerial Toggle' })
