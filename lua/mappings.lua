@@ -9,6 +9,38 @@ map("n", "<leader>tx", "<cmd> tabclose <CR>", { desc = "Tab close" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
+-- path show
+map("n", "<leader>ps", function()
+    local filepath = vim.fn.expand "%:p"
+    if filepath == "" then
+        filepath = "[No Name]"
+    end
+
+    -- Create a floating window
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "Current File Path:", "", filepath })
+
+    local opts = {
+        relative = "cursor",
+        width = math.min(#filepath + 4, vim.o.columns - 4),
+        height = 3,
+        row = 1,
+        col = 0,
+        style = "minimal",
+        border = "rounded",
+        focusable = true,
+    }
+
+    local win_id = vim.api.nvim_open_win(buf, true, opts) -- true = focus immediately
+
+    -- Set up 'q' to close the window
+    vim.keymap.set("n", "q", function()
+        if vim.api.nvim_win_is_valid(win_id) then
+            vim.api.nvim_win_close(win_id, true)
+        end
+    end, { buffer = buf, nowait = true })
+end, { desc = "Show current file path" })
+
 ---------------------------------- neogit ----------------------------------
 map("n", "<leader>gg", "<cmd> Neogit <cr>", { desc = "Open NeoGit" })
 
@@ -22,6 +54,8 @@ map("n", "<leader>gr", "<cmd> DiffviewRefresh <cr>", { desc = "Diffview refresh"
 map("n", "<leader>fr", "<cmd> Telescope resume <cr>", { desc = "Resume last find" })
 map("n", "<leader>fj", "<cmd> Telescope jump_list <cr>", { desc = "Find recent file visits" })
 map("n", "<leader>fn", "<cmd> Telescope notify <cr>", { desc = "Browse notifications" })
+map("n", "<leader>fc", "<cmd> Telescope commands <cr>", { desc = "Browse commands" })
+map("n", "<leader>fk", "<cmd> Telescope keymaps <cr>", { desc = "Browse keymaps" })
 map("n", "<leader>fx", function()
     require("telescope.builtin").diagnostics { bufnr = 0 }
 end, { desc = "Find diagnostics" })
