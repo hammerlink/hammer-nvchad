@@ -172,3 +172,44 @@ end, { desc = "Show full Git blame info in a floating window" })
 
 ---------------------------------- Aerial ----------------------------------
 map("n", "<leader>at", "<cmd> AerialToggle <CR>", { desc = "Aerial Toggle" })
+
+---------------------------------- DAP -------------------------------------
+-- DAP mappings
+map("n", "<leader>db", "<cmd>DapToggleBreakpoint<CR>", { desc = "Toggle Breakpoint" })
+map("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "Continue" })
+map("n", "<leader>ds", "<cmd>DapStepOver<CR>", { desc = "Step Over" })
+map("n", "<leader>di", "<cmd>DapStepInto<CR>", { desc = "Step Into" })
+map("n", "<leader>do", "<cmd>DapStepOut<CR>", { desc = "Step Out" })
+map("n", "<leader>dr", "<cmd>DapRestart<CR>", { desc = "Restart" })
+map("n", "<leader>dt", "<cmd>DapTerminate<CR>", { desc = "Terminate" })
+-- Conditional breakpoint
+map("n", "<leader>dB", function()
+    local condition = vim.fn.input "Breakpoint condition: "
+    if condition ~= "" then
+        require("dap").set_breakpoint(condition)
+    end
+end, { desc = "Set Conditional Breakpoint" })
+
+-- Log point (breakpoint with message)
+map("n", "<leader>dl", function()
+    local message = vim.fn.input "Log point message: "
+    if message ~= "" then
+        require("dap").set_breakpoint(nil, nil, message)
+    end
+end, { desc = "Set Log Point" })
+
+-- Hit count breakpoint
+map("n", "<leader>dh", function()
+    local hit_count = vim.fn.input "Hit count: "
+    if hit_count ~= "" and tonumber(hit_count) then
+        require("dap").set_breakpoint(nil, tonumber(hit_count))
+    end
+end, { desc = "Set Hit Count Breakpoint" })
+
+-- DAP UI mappings
+map("n", "<leader>du", function()
+    require("dapui").toggle()
+end, { desc = "Toggle DAP UI" })
+map("n", "<leader>de", function()
+    require("dapui").eval()
+end, { desc = "Evaluate Expression" })

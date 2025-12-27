@@ -89,4 +89,18 @@ return {
             }
         end,
     },
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+            "theHamsta/nvim-dap-virtual-text",
+            "LiadOz/nvim-dap-repl-highlights",
+        },
+        config = function()
+            require "configs.dap"
+            require("nvim-dap-virtual-text").setup()
+            require("nvim-dap-repl-highlights").setup()
+        end,
+    },
 }
